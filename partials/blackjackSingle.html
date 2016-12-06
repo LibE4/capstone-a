@@ -1,0 +1,18 @@
+<div>
+	<div id="dealerHand" ng-show="isPlaying">
+		Dealer Hand: {{dealerHand.score}}
+		<img width="120px" height="160px" ng-repeat="card in dealerHand.cards" src="{{card.image}}">
+	</div>
+	<div id="yourHand" ng-show="isPlaying">
+		Your Hand: {{userHand.score}}
+		<img width="120px" height="160px" ng-repeat="card in userHand.cards" src="{{card.image}}">
+	</div>
+	<!-- <div id="yourScore">Your Score: <span class="digits">0</span> Record: <span id="wins">0</span>&nbsp;/&nbsp;<span id="losses">0</span></div> -->
+	<button id="deal" ng-click="deal()">Deal</button>
+	<button id="hit" ng-click="userHit()">Hit</button>
+	<button id="stand" ng-click="userStand()">Stand</button>
+<!-- 	<button id="deal" ng-show="!isPlaying" ng-click="deal()">Deal</button>
+	<button id="hit" ng-show="isPlaying" ng-click="userHit()">Hit</button>
+	<button id="stand" ng-show="isPlaying" ng-click="userStand()">Stand</button>
+ -->	<div id="yourStatus">{{outcome}}</div>
+</div>

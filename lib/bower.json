@@ -1,0 +1,23 @@
+{
+  "name": "angular-todo",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Bin Li <binli363@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/LibE4/ng-todo",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "bootstrap": "^3.3.7",
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.8"
+  }
+}

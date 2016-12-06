@@ -1,0 +1,14 @@
+{
+	"users":{
+		"user0":{
+			"uid": "r9iuY23gvHgVNYwF1LOisoobZS72",
+			"username": "aa"
+		}
+	},
+	"cardRooms":{
+		"cardRoom0":{
+			"player0":{},
+			"uid":"r9iuY23gvHgVNYwF1LOisoobZS72"
+		}
+	}
+}

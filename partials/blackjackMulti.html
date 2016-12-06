@@ -1,0 +1,33 @@
+<div class="row" ng-show="!isRoomSet">
+	<div class="form-group">
+			<label>Create Room:</label>
+	    <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="newRoom.profile.roomName" required>
+			<a href="" class="btn btn-lg btn-success col-xs-offset-1 col-xs-10" ng-click="createNewRoom()">Create</a>
+	</div>
+	<div class="form-group">
+    <label for="sel1">Join Room:</label>
+    <select ng-model="roomId" ng-change="joinRoom(roomId)">
+        <option value="">---</option>
+        <option ng-repeat="room in rooms" value="{{room.id}}">
+            {{room.profile.roomName}}</option>
+    </select>
+	</div>
+</div>
+<div class="row" ng-show="isRoomSet">
+	<div id="dealerHand" ng-show="isPlaying">
+		Dealer: {{dealerHand.score}}
+		<img width="120px" height="160px" ng-repeat="card in dealerHand.cards" src="{{card.image}}">
+	</div>
+	<div id="" ng-repeat="player in newRoom.profile.players" ng-show="isPlaying">
+		{{player}}: {{userHand.score}}
+		<img width="120px" height="160px" ng-repeat="card in HumanPlayers[player].cards" src="{{card.image}}">
+	</div>
+	<!-- <div id="yourScore">Your Score: <span class="digits">0</span> Record: <span id="wins">0</span>&nbsp;/&nbsp;<span id="losses">0</span></div> -->
+	<button id="deal" ng-click="deal()">Deal</button>
+	<button id="hit" ng-click="userHit()">Hit</button>
+	<button id="stand" ng-click="userStand()">Stand</button>
+<!-- 	<button id="deal" ng-show="!isPlaying" ng-click="deal()">Deal</button>
+	<button id="hit" ng-show="isPlaying" ng-click="userHit()">Hit</button>
+	<button id="stand" ng-show="isPlaying" ng-click="userStand()">Stand</button>
+ -->	<div id="yourStatus">{{outcome}}</div>
+</div>
