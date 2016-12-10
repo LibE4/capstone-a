@@ -96,17 +96,24 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
                         that.SharedRoomData.dealerHand.cards[0].image = holeCardImg;
                         holeCardImg = c;
                     }            
-                console.log("that.SharedRoomData.dealerHand.cards", that.SharedRoomData.dealerHand.cards);
-                    ResultService.checkDeal(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
+                    if (that.SharedRoomData.hasDealer)
+                        ResultService.checkDeal(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
             } else {
                 if (!that.SharedRoomData.HumanPlayers.hasOwnProperty(card.username)) {
                     that.SharedRoomData.HumanPlayers[card.username] = {};
                     that.SharedRoomData.HumanPlayers[card.username].cards = [];
                     that.SharedRoomData.HumanPlayers[card.username].cards[0] = card;
+                    if (card.username !== thisPlayer){
+                        that.SharedRoomData.rivalHand = that.SharedRoomData.HumanPlayers[card.username];
+                        console.log("rival", that.SharedRoomData.rivalHand, card.username, thisPlayer);
+                    }
                 } else {
                     that.SharedRoomData.HumanPlayers[card.username].cards.push(card);
                     if (thisPlayer === card.username){
-                        ResultService.checkUserHit(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
+                        if (that.SharedRoomData.hasDealer)
+                            ResultService.checkUserHit(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
+                        else
+                            ResultService.getScore(that.SharedRoomData.userHand);
                     }
                 }
             }
@@ -121,6 +128,12 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
             } else {
                 that.SharedRoomData.newRoom.profile.players = data1.val().players;
                 numPlayers = Object.keys(that.SharedRoomData.newRoom.profile.players).length;
+                if (that.SharedRoomData.hasDealer)
+                    for ( let player in data1.val().players){
+                        if (data1.val().players[player] !== thisPlayer){
+                            that.SharedRoomData.rivalHand = that.SharedRoomData.HumanPlayers[player];
+                        }
+                    }
             }
             getRooms();
         } else if (data1.val().hasOwnProperty("isDealerStand")) {
@@ -128,15 +141,20 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
             let clearTable = data1.val().clearTable;
             if (clearTable){
                 wipeTable();
-            }
-            that.SharedRoomData.newRoom.standStatus.numPlayerStand = data1.val().numPlayerStand;        
-            console.log("that.SharedRoomData.newRoom.standStatus.numPlayerStand", that.SharedRoomData.newRoom.standStatus.numPlayerStand);      
-            let isDealerStand = data1.val().isDealerStand;
-            if (isDealerStand) {
-                let c = that.SharedRoomData.dealerHand.cards[0].image;
-                that.SharedRoomData.dealerHand.cards[0].image = holeCardImg;
-                holeCardImg = c;
-                ResultService.checkWinner(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);  
+            } else {
+                that.SharedRoomData.newRoom.standStatus.numPlayerStand = data1.val().numPlayerStand;        
+                console.log("that.SharedRoomData.newRoom.standStatus.numPlayerStand", that.SharedRoomData.newRoom.standStatus.numPlayerStand);      
+                let isDealerStand = data1.val().isDealerStand;
+                if (isDealerStand) {
+                    let c = that.SharedRoomData.dealerHand.cards[0].image;
+                    that.SharedRoomData.dealerHand.cards[0].image = holeCardImg;
+                    holeCardImg = c;
+                    if (that.SharedRoomData.hasDealer)
+                        ResultService.checkWinner(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
+                    else
+                        ResultService.checkPtpWinner(that.SharedRoomData.userHand, that.SharedRoomData.rivalHand);
+
+                }
             }
         }
         $rootScope.$apply();

@@ -14,7 +14,7 @@
 	</div>
 </div>
 <div class="row" ng-show="SharedRoomData.isRoomSet">
-	<div id="dealerHand" ng-show="SharedRoomData.isPlaying">
+	<div id="dealerHand" ng-show="SharedRoomData.hasDealer">
 		Dealer:
 		<img width="120px" height="160px" ng-repeat="card in SharedRoomData.dealerHand.cards" src="{{card.image}}">
 	</div>

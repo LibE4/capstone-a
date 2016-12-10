@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("BlackjackSingleCtrl", function($scope, $rootScope, CardFactory, ResultService){
+app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, CardFactory, ResultService){
   $scope.SharedGameData = ResultService.SharedGameData;
   $scope.SharedGameData.userHand = {};
   $scope.SharedGameData.dealerHand = {};
@@ -76,6 +76,11 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, CardFactory, 
       holeCardImg = c;
       ResultService.checkWinner($scope.SharedGameData.userHand, $scope.SharedGameData.dealerHand);
   }
+
+  $scope.leaveRoom = function(){
+      $location.url("/game/blackjack");
+      $scope.resetDeal();
+  };
 
   $scope.resetDeal();
 });

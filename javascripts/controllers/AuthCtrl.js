@@ -24,7 +24,7 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 			$rootScope.user = userCreds;
 			$scope.login = {};
 			$scope.register = {};
-			$location.url("/game/blackjack");
+			$location.url("/game/home");
 		});
 	};
 	
@@ -79,8 +79,8 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 	        } else {
 						$rootScope.user = newUserData;
 	        }
+	        console.log("google user",$rootScope.user );
 				});
-        console.log("$rootScope.user",$rootScope.user );
         $location.url("/game/blackjack");
       }).catch(function(error) {
         // Handle Errors here.

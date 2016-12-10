@@ -1,8 +1,8 @@
 "use strict";
 
-app.controller("BlackjackMultiCtrl", function($scope, $rootScope, $routeParams, $location, CardFactory, RoomFactory, UserFactory, ResultService, RoomService){
+app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $routeParams, $location, CardFactory, RoomFactory, UserFactory, ResultService, RoomService){
     $scope.SharedRoomData = RoomService.SharedRoomData;
-    $scope.SharedRoomData.hasDealer = true;
+    $scope.SharedRoomData.hasDealer = false;
 
     $scope.createNewRoom = function(){
         RoomService.createNewRoom();
@@ -29,16 +29,8 @@ app.controller("BlackjackMultiCtrl", function($scope, $rootScope, $routeParams, 
         RoomService.userStand();
     }; //let dealer play
 
-    var dealerHit = function (){
-        RoomService.dealerHit();
-    };
-
-    var dealerStand = function (){
-        RoomService.dealerStand();
-    };
-
     $scope.resetDeal = function(){
         RoomService.resetDeal();
     };
-
+  
 });

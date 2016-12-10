@@ -40,7 +40,7 @@ app.service("ResultService", function($rootScope, UserFactory){
 	        that.SharedGameData.outcome = "You tied!";
 	        // isPlaying = false; 
 	    }else if (dealerHand.score === 21){
-	        that.SharedGameData.outcome = "You lose!";
+	        that.SharedGameData.outcome = "You lost!";
 	        $rootScope.user.losses++;
 	        $rootScope.user.balance -= that.SharedGameData.bet;
 	        UserFactory.editUser($rootScope.user);
@@ -51,7 +51,7 @@ app.service("ResultService", function($rootScope, UserFactory){
 	this.checkUserHit = function (userHand, dealerHand){
 	    userHand.score = that.getScore(userHand.cards);
 	    if (userHand.score > 21){
-	        that.SharedGameData.outcome = "You lose!";
+	        that.SharedGameData.outcome = "You lost!";
 	        $rootScope.user.losses++;
 	        $rootScope.user.balance -= that.SharedGameData.bet;
 	        UserFactory.editUser($rootScope.user);
@@ -63,13 +63,13 @@ app.service("ResultService", function($rootScope, UserFactory){
 	    userHand.score = that.getScore(userHand.cards);
 	    dealerHand.score = that.getScore(dealerHand.cards);
 	    if (dealerHand.score > 21 || userHand.score > dealerHand.score){
-	        that.SharedGameData.outcome = "You win!";
+	        that.SharedGameData.outcome = "You won!";
 	        $rootScope.user.wins++;
 	        $rootScope.user.balance += that.SharedGameData.bet;
 	        UserFactory.editUser($rootScope.user);
 	        // isPlaying = false; 
 	    }else if (dealerHand.score > userHand.score){
-	        that.SharedGameData.outcome = "You lose!";
+	        that.SharedGameData.outcome = "You lost!";
 	        $rootScope.user.losses++;
 	        $rootScope.user.balance -= that.SharedGameData.bet;
 	        UserFactory.editUser($rootScope.user);
@@ -78,5 +78,34 @@ app.service("ResultService", function($rootScope, UserFactory){
 	        that.SharedGameData.outcome = "You tied!";
 	        // isPlaying = false; 
 	    }
+	};
+
+	this.checkPtpWinner = function (userHand, rivalHand){
+	    userHand.score = that.getScore(userHand.cards);
+	    rivalHand.score = that.getScore(rivalHand.cards);
+	    if (rivalHand.score > 21 && userHand.score <= 21){
+        that.SharedGameData.outcome = "You won!";
+		  } else if (rivalHand.score <= 21 && userHand.score > 21){
+        that.SharedGameData.outcome = "You lost!";
+		  } else if (rivalHand.score <= 21 && userHand.score <= 21){
+		    if (userHand.score > rivalHand.score){
+		        that.SharedGameData.outcome = "You won!";
+		        $rootScope.user.wins++;
+		        $rootScope.user.balance += that.SharedGameData.bet;
+		        UserFactory.editUser($rootScope.user);
+		        // isPlaying = false; 
+		    }else if (rivalHand.score > userHand.score){
+		        that.SharedGameData.outcome = "You lost!";
+		        $rootScope.user.losses++;
+		        $rootScope.user.balance -= that.SharedGameData.bet;
+		        UserFactory.editUser($rootScope.user);
+		        // isPlaying = false; 
+		    }else if (rivalHand.score === userHand.score){
+		        that.SharedGameData.outcome = "You tied!";
+		        // isPlaying = false; 
+		    }
+		  } else {
+		        that.SharedGameData.outcome = "You both busted!";
+		      }
 	};
 });

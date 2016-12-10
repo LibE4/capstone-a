@@ -18,6 +18,10 @@ app.controller("NavCtrl", function($scope, $rootScope){
 		  {
 		  	name:"Blackjack",
 		  	url:"#/game/blackjack"
+		  } , 
+		  {
+		  	name:"Home",
+		  	url:"#/game/home"
 		  } 
   	];
 });
