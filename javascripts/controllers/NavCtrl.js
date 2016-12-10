@@ -4,7 +4,7 @@ app.controller("NavCtrl", function($scope, $rootScope){
 	$scope.navGame = 
 		[
 			// {
-			// 	name:Logout ${$rootScope.user.username}``,
+			// 	name:`Logout ${$rootScope.user.username}`,
 			// 	url:"#/logout"
 			// },
 		  {

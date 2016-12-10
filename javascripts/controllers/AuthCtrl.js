@@ -49,6 +49,9 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 	$scope.registerUser = function(registerNewUser){
 		AuthFactory.registerWithEmail(registerNewUser).then(function(didRegister){
 			registerNewUser.uid = didRegister.uid;
+			registerNewUser.balance = 0;
+			registerNewUser.wins = 0;
+			registerNewUser.losses = 0;
 			return UserFactory.addUser(registerNewUser);
 		}).then(function(registerComplete){
 			logMeIn(registerNewUser);
@@ -63,10 +66,20 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
   $scope.googleLoginUser = () => {
       AuthFactory.authenticateGoogle().then((userData) => {
         // The signed-in user info.
-        $rootScope.user = {
-          uid: userData.uid,
-          username: userData.displayName
-        };
+				UserFactory.getUser(userData.uid).then(function(newUserData){
+	        if (newUserData === undefined){
+		        $rootScope.user = {
+		          uid: userData.uid,
+		          username: userData.displayName,
+							balance : 100,
+							wins : 0,
+							losses : 0
+		        };
+						UserFactory.addUser($rootScope.user).then(function(){});
+	        } else {
+						$rootScope.user = newUserData;
+	        }
+				});
         console.log("$rootScope.user",$rootScope.user );
         $location.url("/game/blackjack");
       }).catch(function(error) {

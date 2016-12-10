@@ -2,19 +2,6 @@
 
 app.factory("CardFactory", function($q, $http){
 
-	var getSingleCard = function(){
-		return $q((resolve, reject) =>{
-			$http.get(`https://deckofcardsapi.com/api/deck/45ptvgtmyihm/draw/?count=1`
-			)
-			.success(function(getSingleResponse){
-				resolve(getSingleResponse);
-			})
-			.error(function(errorResponse){
-				reject(errorResponse);
-			});
-		});
-	};
-
 	var getCards = function(n){
 		return $q((resolve, reject)=>{
 			$http.get(`https://deckofcardsapi.com/api/deck/45ptvgtmyihm/draw/?count=${n}`)

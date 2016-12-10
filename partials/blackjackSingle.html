@@ -1,18 +1,24 @@
 <div>
-	<div id="dealerHand" ng-show="isPlaying">
-		Dealer Hand: {{dealerHand.score}}
-		<img width="120px" height="160px" ng-repeat="card in dealerHand.cards" src="{{card.image}}">
+	<div id="dealerHand" ng-show="SharedGameData.isPlaying">
+		Dealer Hand:
+		<img width="120px" height="160px" ng-repeat="card in SharedGameData.dealerHand.cards" src="{{card.image}}">
 	</div>
-	<div id="yourHand" ng-show="isPlaying">
-		Your Hand: {{userHand.score}}
-		<img width="120px" height="160px" ng-repeat="card in userHand.cards" src="{{card.image}}">
+	<div id="yourHand" ng-show="SharedGameData.isPlaying">
+		Your Hand: {{SharedGameData.userHand.score}}
+		<img width="120px" height="160px" ng-repeat="card in SharedGameData.userHand.cards" src="{{card.image}}">
 	</div>
-	<!-- <div id="yourScore">Your Score: <span class="digits">0</span> Record: <span id="wins">0</span>&nbsp;/&nbsp;<span id="losses">0</span></div> -->
+	<div class="form-group">
+		<label>Your Bet</label>
+    <input type="number" ng-model="SharedGameData.bet" required>
+	</div>
 	<button id="deal" ng-click="deal()">Deal</button>
 	<button id="hit" ng-click="userHit()">Hit</button>
 	<button id="stand" ng-click="userStand()">Stand</button>
+	<button id="clear" ng-click="resetDeal()">Clear Table</button>
 <!-- 	<button id="deal" ng-show="!isPlaying" ng-click="deal()">Deal</button>
 	<button id="hit" ng-show="isPlaying" ng-click="userHit()">Hit</button>
 	<button id="stand" ng-show="isPlaying" ng-click="userStand()">Stand</button>
- -->	<div id="yourStatus">{{outcome}}</div>
+ -->	
+  <div id="yourStatus">{{SharedGameData.outcome}}</div>
+	<div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
 </div>

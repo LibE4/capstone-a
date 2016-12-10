@@ -22,7 +22,10 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 	var postNewRoom = function(newRoom){
 		return $q((resolve, reject) =>{
 			$http.post(`${FIREBASE_CONFIG.databaseURL}/cardRooms.json`,
-				JSON.stringify(newRoom)
+				JSON.stringify({
+					profile: newRoom.profile,
+					standStatus: newRoom.standStatus
+				})
 			)
 			.success(function(postResponse){
 				resolve(postResponse);
@@ -33,9 +36,9 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 		});
 	};
 
-	var deleteRoom =  function(groupId){
+	var deleteRoom =  function(roomId){
 		return $q((resolve, reject) =>{
-			$http.delete(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${groupId}.json`
+			$http.delete(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}.json`
 			)
 			.success(function(deleteResponse){
 				resolve();
@@ -46,10 +49,13 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 		});
 	};
 
-	var editRoom = function(editRoom){
+	var editRoom = function(editRoom, roomId){
 		return $q((resolve, reject) =>{
-			$http.put(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${editRoom.id}.json`,
-				JSON.stringify(editRoom)
+			$http.put(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}.json`,
+				JSON.stringify({
+					profile: editRoom.profile,
+					standStatus: editRoom.standStatus
+				})
 			)
 			.success(function(editResponse){
 				resolve(editResponse);
@@ -74,23 +80,9 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 		});
 	};
 
-	var postPlayerInRoom = function(newPlayer, roomId){
-		return $q((resolve, reject) =>{
-			$http.post(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}.json`,
-				JSON.stringify(newPlayer)
-			)
-			.success(function(postResponse){
-				resolve(postResponse);
-			})
-			.error(function(errorResponse){
-				reject(errorResponse);
-			});
-		});
-	};
-
-	var getPlayerInRoom = function(roomId){
+	var getProfileInRoom = function(roomId){
 		return $q((resolve, reject)=>{
-			$http.get(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}/profile/players.json`)
+			$http.get(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}/profile.json`)
 			.success(function(response){
 				resolve(response);
 			})
@@ -99,7 +91,35 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 			});
 		});
 	};
-	var postCardInRoom = function(newCard, roomId){
+	
+	var getStandStatus = function(roomId){
+		return $q((resolve, reject)=>{
+			$http.get(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}/standStatus.json`)
+			.success(function(response){
+				resolve(response);
+			})
+			.error(function(errorResponse){
+				reject(errorResponse);
+			});
+		});
+	};
+
+	var editStandStatus = function(roomId, standStatus){
+		console.log("standStatus", standStatus);
+		return $q((resolve, reject) =>{
+			$http.put(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}/standStatus.json`,
+				JSON.stringify(standStatus)
+			)
+			.success(function(editResponse){
+				resolve(editResponse);
+			})
+			.error(function(errorResponse){
+				reject(errorResponse);
+			});
+		});
+	};
+
+	var postCardInRoom = function(roomId, newCard){
 		return $q((resolve, reject) =>{
 			$http.post(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}.json`,
 				JSON.stringify(newCard)
@@ -115,10 +135,12 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 
 	return {getRooms: getRooms,
 					postNewRoom: postNewRoom,
+					deleteRoom: deleteRoom,
 					editRoom: editRoom,
 					editPlayerList: editPlayerList,
 					deleteRoom: deleteRoom,
-					postPlayerInRoom: postPlayerInRoom,
-					getPlayerInRoom: getPlayerInRoom,
+					getProfileInRoom: getProfileInRoom,
+					getStandStatus: getStandStatus,
+					editStandStatus: editStandStatus,
 					postCardInRoom: postCardInRoom};
 });

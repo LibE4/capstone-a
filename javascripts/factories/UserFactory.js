@@ -6,7 +6,10 @@ app.factory("UserFactory", function($q, $http, FIREBASE_CONFIG){
 			$http.post(`${FIREBASE_CONFIG.databaseURL}/users.json`,
 		  JSON.stringify({
 		  	uid: authData.uid,
-		  	username: authData.username
+		  	username: authData.username,
+		  	balance: authData.balance,
+		  	wins: authData.wins,
+		  	losses: authData.losses
 		  }))
 		  .success(function(storeUserSuccess){
 		  	resolve(storeUserSuccess);
@@ -23,14 +26,34 @@ app.factory("UserFactory", function($q, $http, FIREBASE_CONFIG){
 		  .success(function(userObject){
 		  	let users = [];
 		  	Object.keys(userObject).forEach(function(key){
+					userObject[key].userIndex = key;
 		  		users.push(userObject[key]);
 		  	});
-		  	resolve(users[0]);
+		  	if (users[0] === undefined){
+		  		resolve();
+		  	} else {
+			  	resolve(users[0]);
+		  	}
 		  })
 		  .error(function(error){
 		  	reject(error);
 		  });
 		});
 	};
-	return {addUser:addUser, getUser:getUser};
+
+	let editUser = function(editUser){
+		return $q((resolve, reject) =>{
+			$http.put(`${FIREBASE_CONFIG.databaseURL}/users/${editUser.userIndex}.json`,
+				JSON.stringify(editUser)
+			)
+			.success(function(editResponse){
+				resolve(editResponse);
+			})
+			.error(function(errorResponse){
+				reject(errorResponse);
+			});
+		});
+	};	
+
+	return {addUser:addUser, getUser:getUser, editUser:editUser};
 });
