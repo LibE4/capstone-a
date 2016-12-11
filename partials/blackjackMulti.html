@@ -1,16 +1,17 @@
 <div class="row" ng-show="!SharedRoomData.isRoomSet">
-	<div class="form-group">
+	<form>
 			<label>Create Room:</label>
 	    <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="SharedRoomData.newRoom.profile.roomName" required>
 			<a href="" class="btn btn-lg btn-success col-xs-offset-1 col-xs-10" ng-click="createNewRoom()">Create</a>
-	</div>
+	</form>
 	<div class="form-group">
     <label for="sel1">Join Room:</label>
-    <select ng-model="roomId" ng-change="joinRoom(roomId)">
+    <select ng-model="roomId" ng-click= "getRooms()" >
         <option value="">---</option>
         <option ng-repeat="room in SharedRoomData.rooms" value="{{room.id}}">
             {{room.profile.roomName}}</option>
     </select>
+		<a href="" class="btn btn-lg btn-primary col-xs-offset-1 col-xs-10" ng-click="joinRoom(roomId)">Join</a>
 	</div>
 </div>
 <div class="row" ng-show="SharedRoomData.isRoomSet">

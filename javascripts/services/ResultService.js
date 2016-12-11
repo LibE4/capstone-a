@@ -36,32 +36,42 @@ app.service("ResultService", function($rootScope, UserFactory){
 	this.checkDeal = function (userHand, dealerHand){
 	    userHand.score = that.getScore(userHand.cards);
 	    dealerHand.score = that.getScore(dealerHand.cards);
-	    if (userHand.score === 21 && dealerHand.score === 21){
-	        that.SharedGameData.outcome = "You tied!";
-	        // isPlaying = false; 
-	    }else if (dealerHand.score === 21){
-	        that.SharedGameData.outcome = "You lost!";
-	        $rootScope.user.losses++;
-	        $rootScope.user.balance -= that.SharedGameData.bet;
-	        UserFactory.editUser($rootScope.user);
-	        // isPlaying = false; 
+	    if (dealerHand.score === 21){
+	    	that.SharedGameData.isResultOut = true;
+		    if (userHand.score === 21){
+		        that.SharedGameData.outcome = "You tied!";
+		        // isPlaying = false; 
+		    }else {
+		        that.SharedGameData.outcome = "You lost!";
+		        $rootScope.user.losses++;
+		        $rootScope.user.balance -= that.SharedGameData.bet;
+		        UserFactory.editUser($rootScope.user);
+		        // isPlaying = false;
+        } 
+	    } else if (userHand.score === 21){
+	    	that.SharedGameData.isDealerTurn = true;
 	    }
 	};
 
-	this.checkUserHit = function (userHand, dealerHand){
+	this.checkUserHit = function (userHand){
 	    userHand.score = that.getScore(userHand.cards);
-	    if (userHand.score > 21){
-	        that.SharedGameData.outcome = "You lost!";
-	        $rootScope.user.losses++;
-	        $rootScope.user.balance -= that.SharedGameData.bet;
-	        UserFactory.editUser($rootScope.user);
-	        // isPlaying = false; 
+	    if (userHand.score >= 21){
+		    	that.SharedGameData.isDealerTurn = true;
+			    if (userHand.score > 21){
+			    	that.SharedGameData.isResultOut = true;
+		        that.SharedGameData.outcome = "You lost!";
+		        $rootScope.user.losses++;
+		        $rootScope.user.balance -= that.SharedGameData.bet;
+		        UserFactory.editUser($rootScope.user);
+		        // isPlaying = false; 
+		    	}
 	    }
 	};
 
 	this.checkWinner = function (userHand, dealerHand){
 	    userHand.score = that.getScore(userHand.cards);
 	    dealerHand.score = that.getScore(dealerHand.cards);
+    	that.SharedGameData.isResultOut = true;
 	    if (dealerHand.score > 21 || userHand.score > dealerHand.score){
 	        that.SharedGameData.outcome = "You won!";
 	        $rootScope.user.wins++;
@@ -83,6 +93,7 @@ app.service("ResultService", function($rootScope, UserFactory){
 	this.checkPtpWinner = function (userHand, rivalHand){
 	    userHand.score = that.getScore(userHand.cards);
 	    rivalHand.score = that.getScore(rivalHand.cards);
+    	that.SharedGameData.isResultOut = true;
 	    if (rivalHand.score > 21 && userHand.score <= 21){
         that.SharedGameData.outcome = "You won!";
 		  } else if (rivalHand.score <= 21 && userHand.score > 21){

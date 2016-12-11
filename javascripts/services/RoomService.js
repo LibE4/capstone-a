@@ -8,7 +8,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
     this.SharedRoomData.newRoom.standStatus = {numPlayerStand:0, isDealerStand:false};
     this.SharedRoomData.rooms = {};
     this.SharedRoomData.isRoomSet = false; // for show/hide room setup page
-    this.SharedRoomData.isPlaying = true; // for show/hide table
+    this.SharedRoomData.isPlaying = true; // for show/hide game table
     this.SharedRoomData.dealerHand = {};
     this.SharedRoomData.dealerHand.cards = [];
     this.SharedRoomData.dealerHand.score = 0;
@@ -26,13 +26,12 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
     var holeCardImg = "./winner_logo.png";
 
     // get room list
-    var getRooms = () => {
+    this.getRooms = function(){
         RoomFactory.getRooms().then((response) => {
             that.SharedRoomData.rooms = response;
             console.log("rooms response", response);
         });
     };
-    getRooms();  
 
     //card room setup
     this.createNewRoom = function(){
@@ -55,7 +54,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
 
     this.joinRoom = function(roomIdDOM){
         roomId = roomIdDOM;
-          console.log("roomId", roomId);
+          // console.log("roomId", roomId);
         $rootScope.user.roomid = roomId;
         RoomFactory.getProfileInRoom(roomId).then(function(roomProfile){
             that.SharedRoomData.newRoom.profile = roomProfile;
@@ -64,7 +63,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
                 that.SharedRoomData.isRoomSet = true; 
                 // Reference to the /messages/ database path.
                 roomRef = firebase.database().ref(`cardRooms/${roomId}`);
-                console.log("roomRef", roomRef);
+                // console.log("roomRef", roomRef);
                 roomRef.off();
                 roomRef.on('child_added', setRealtimeData);
                 roomRef.on('child_changed', setRealtimeData);
@@ -78,40 +77,39 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
         that.SharedRoomData.newRoom.profile.roomName = "";
         RoomFactory.editPlayerList(roomId, that.SharedRoomData.newRoom.profile.players).then(function(){
             that.resetDeal();
-            getRooms();
+            that.getRooms();
         });
     };
 
     // to sync cards, players in same room
     var setRealtimeData = function(data1, data2) {
-        console.log("data1", data1.val());
+        // console.log("data1", data1.val());
         if (data1.val().hasOwnProperty("code")) {
-            console.log("data", data1.val(), data2);
+            // console.log("data", data1.val(), data2);
             // process cards received
             let card = data1.val();
             if (card.username === "Dealer") {
                     that.SharedRoomData.dealerHand.cards.push(card);
-                    if(that.SharedRoomData.dealerHand.cards.length === 1){
-                        let c = that.SharedRoomData.dealerHand.cards[0].image;
-                        that.SharedRoomData.dealerHand.cards[0].image = holeCardImg;
-                        holeCardImg = c;
+                    if(that.SharedRoomData.dealerHand.cards.length === 1 && that.SharedRoomData.hasDealer) {
+                        flipCard(that.SharedRoomData.dealerHand.cards[0]);
                     }            
-                    if (that.SharedRoomData.hasDealer)
-                        ResultService.checkDeal(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
+                    if (that.SharedRoomData.hasDealer) ResultService.checkDeal(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
             } else {
                 if (!that.SharedRoomData.HumanPlayers.hasOwnProperty(card.username)) {
+                    // distribute first card
                     that.SharedRoomData.HumanPlayers[card.username] = {};
                     that.SharedRoomData.HumanPlayers[card.username].cards = [];
                     that.SharedRoomData.HumanPlayers[card.username].cards[0] = card;
                     if (card.username !== thisPlayer){
                         that.SharedRoomData.rivalHand = that.SharedRoomData.HumanPlayers[card.username];
-                        console.log("rival", that.SharedRoomData.rivalHand, card.username, thisPlayer);
+                        flipCard(that.SharedRoomData.rivalHand.cards[0]);
                     }
                 } else {
+                    // distribute second and following card
                     that.SharedRoomData.HumanPlayers[card.username].cards.push(card);
                     if (thisPlayer === card.username){
                         if (that.SharedRoomData.hasDealer)
-                            ResultService.checkUserHit(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
+                            ResultService.checkUserHit(that.SharedRoomData.userHand);
                         else
                             ResultService.getScore(that.SharedRoomData.userHand);
                     }
@@ -120,7 +118,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
         } else if (data1.val().hasOwnProperty("roomName")) {
             // process room profile info
             if (!data1.val().hasOwnProperty("players")){
-                console.log("delete room");
+                // console.log("delete room");
                 that.SharedRoomData.isRoomSet = false; 
                 numPlayers = 0;
                 RoomFactory.deleteRoom(roomId).then(function(){
@@ -135,7 +133,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
                         }
                     }
             }
-            getRooms();
+            that.getRooms();
         } else if (data1.val().hasOwnProperty("isDealerStand")) {
             // process stand status info 
             let clearTable = data1.val().clearTable;
@@ -143,16 +141,17 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
                 wipeTable();
             } else {
                 that.SharedRoomData.newRoom.standStatus.numPlayerStand = data1.val().numPlayerStand;        
-                console.log("that.SharedRoomData.newRoom.standStatus.numPlayerStand", that.SharedRoomData.newRoom.standStatus.numPlayerStand);      
+                // console.log("that.SharedRoomData.newRoom.standStatus.numPlayerStand", that.SharedRoomData.newRoom.standStatus.numPlayerStand);      
                 let isDealerStand = data1.val().isDealerStand;
                 if (isDealerStand) {
-                    let c = that.SharedRoomData.dealerHand.cards[0].image;
-                    that.SharedRoomData.dealerHand.cards[0].image = holeCardImg;
-                    holeCardImg = c;
-                    if (that.SharedRoomData.hasDealer)
+                    if (that.SharedRoomData.hasDealer) {
+                        flipCard(that.SharedRoomData.dealerHand.cards[0]);
                         ResultService.checkWinner(that.SharedRoomData.userHand, that.SharedRoomData.dealerHand);
-                    else
+                    }
+                    else {
+                        flipCard(that.SharedRoomData.rivalHand.cards[0]);
                         ResultService.checkPtpWinner(that.SharedRoomData.userHand, that.SharedRoomData.rivalHand);
+                    }
 
                 }
             }
@@ -166,7 +165,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
                 console.log("response.remaining", response.remaining);
                 needShuffle = true; 
             }
-            // that.SharedRoomData.isPlaying = true;
             let count = 0;
             for (let prop in that.SharedRoomData.newRoom.profile.players) {
                 for (let i = 0; i < 2; i++){
@@ -197,15 +195,20 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
     this.userStand =  function (){
         let numPlayerStand = ++that.SharedRoomData.newRoom.standStatus.numPlayerStand;
         RoomFactory.editStandStatus(roomId, that.SharedRoomData.newRoom.standStatus).then(function(){});
-        console.log("numPlayerStand", numPlayerStand);
-        console.log("numPlayers", numPlayers);
+        // console.log("numPlayerStand", numPlayerStand);
+        // console.log("numPlayers", numPlayers);
         if (numPlayerStand === numPlayers){
             // dealer reveal cards,then
-            if (that.SharedRoomData.dealerHand.score >= 17){
+            if (that.SharedRoomData.hasDealer) {
+                if (that.SharedRoomData.dealerHand.score >= 17){
+                    that.SharedRoomData.newRoom.standStatus.isDealerStand = true;
+                    RoomFactory.editStandStatus(roomId, that.SharedRoomData.newRoom.standStatus).then(function(){});
+                }else{
+                    dealerHit();
+                }
+            } else {
                 that.SharedRoomData.newRoom.standStatus.isDealerStand = true;
                 RoomFactory.editStandStatus(roomId, that.SharedRoomData.newRoom.standStatus).then(function(){});
-            }else{
-                dealerHit();
             }
         }
     }; //let dealer play
@@ -213,7 +216,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
     var dealerHit = function (){
         if (that.SharedRoomData.dealerHand.score < 17){
             CardFactory.getCards(1).then(function(response){
-                console.log("dealer hit");
                 let card = response.cards[0];
                 card.username = "Dealer";
                 RoomFactory.postCardInRoom(roomId, card).then(function(){
@@ -249,6 +251,14 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
         that.SharedRoomData.newRoom.standStatus.clearTable = false;
         that.SharedRoomData.newRoom.standStatus.isDealerStand = false;
         that.SharedRoomData.newRoom.standStatus.numPlayerStand = 0;
+        holeCardImg = "./winner_logo.png";
         RoomFactory.editRoom(that.SharedRoomData.newRoom, roomId).then(function(){});
     }
+
+    var flipCard = function (card){
+        console.log("card fliped");
+        let c = card.image;
+        card.image = holeCardImg;
+        holeCardImg = c;
+    }    
 });

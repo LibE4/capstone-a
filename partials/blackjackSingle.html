@@ -1,10 +1,10 @@
 <div>
 	<div id="dealerHand" ng-show="SharedGameData.isPlaying">
-		Dealer Hand:
+		Dealer Hand: <span ng-show="SharedGameData.isDealerTurn">{{SharedGameData.dealerHand.score}}</span>
 		<img width="120px" height="160px" ng-repeat="card in SharedGameData.dealerHand.cards" src="{{card.image}}">
 	</div>
 	<div id="yourHand" ng-show="SharedGameData.isPlaying">
-		Your Hand: {{SharedGameData.userHand.score}}
+		Your Hand: <span>{{SharedGameData.userHand.score}}</span>
 		<img width="120px" height="160px" ng-repeat="card in SharedGameData.userHand.cards" src="{{card.image}}">
 	</div>
 	<div class="form-group">

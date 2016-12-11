@@ -3,6 +3,11 @@
 app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $routeParams, $location, CardFactory, RoomFactory, UserFactory, ResultService, RoomService){
     $scope.SharedRoomData = RoomService.SharedRoomData;
     $scope.SharedRoomData.hasDealer = false;
+    RoomService.getRooms();
+
+    $scope.getRooms = function(){
+        RoomService.getRooms();
+    };
 
     $scope.createNewRoom = function(){
         RoomService.createNewRoom();

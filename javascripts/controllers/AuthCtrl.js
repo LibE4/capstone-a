@@ -81,7 +81,7 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 	        }
 	        console.log("google user",$rootScope.user );
 				});
-        $location.url("/game/blackjack");
+        $location.url("/game/home");
       }).catch(function(error) {
         // Handle Errors here.
         console.log("user error", error);
