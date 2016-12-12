@@ -1,15 +1,14 @@
 "use strict";
 
 app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, CardFactory, ResultService){
-  $scope.SharedGameData = ResultService.SharedGameData;
-  $scope.SharedGameData.userHand = {};
-  $scope.SharedGameData.dealerHand = {};
-  $scope.SharedGameData.userHand.score = 0;
-  $scope.SharedGameData.dealerHand.score = 0;
-  $scope.SharedGameData.bet = 0;
-  $scope.SharedGameData.isPlaying = true; 
-  $scope.SharedGameData.isDealerTurn = false; 
-  $scope.SharedGameData.isResultOut = false; 
+  $rootScope.blackJack.userHand = {};
+  $rootScope.blackJack.dealerHand = {};
+  $rootScope.blackJack.userHand.score = 0;
+  $rootScope.blackJack.dealerHand.score = 0;
+  $rootScope.blackJack.bet = 0;
+  $rootScope.blackJack.isPlaying = true; 
+  $rootScope.blackJack.isDealerTurn = false; 
+  $rootScope.blackJack.isResultOut = false; 
   var needShuffle = false;    
   var holeCardImg = "./winner_logo.png";
 
@@ -18,29 +17,29 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
       CardFactory.getCards(4).then(function(response){
           if (parseInt(response.remaining) <= 75) { needShuffle = true; }
           // isPlaying = true; 
-          $scope.SharedGameData.userHand.cards = response.cards.splice(0, 2);
-          $scope.SharedGameData.dealerHand.cards = response.cards;
+          $rootScope.blackJack.userHand.cards = response.cards.splice(0, 2);
+          $rootScope.blackJack.dealerHand.cards = response.cards;
           // dealer hide first card
           dealerFlipCard();
-          ResultService.checkDeal($scope.SharedGameData.userHand, $scope.SharedGameData.dealerHand);
-          if ($scope.SharedGameData.isResultOut) dealerFlipCard();
-          else if ($scope.SharedGameData.isDealerTurn) $scope.userStand();
+          ResultService.checkDeal($rootScope.blackJack.userHand, $rootScope.blackJack.dealerHand);
+          if ($rootScope.blackJack.isResultOut) dealerFlipCard();
+          else if ($rootScope.blackJack.isDealerTurn) $scope.userStand();
       });
   }; //start to play
 
   $scope.userHit = function (){
       CardFactory.getCards(1).then(function(response){
-          $scope.SharedGameData.userHand.cards = $scope.SharedGameData.userHand.cards.concat(response.cards);
-          ResultService.checkUserHit($scope.SharedGameData.userHand);
-          if ($scope.SharedGameData.isResultOut) dealerFlipCard();
-          else if ($scope.SharedGameData.isDealerTurn) $scope.userStand();
+          $rootScope.blackJack.userHand.cards = $rootScope.blackJack.userHand.cards.concat(response.cards);
+          ResultService.checkUserHit($rootScope.blackJack.userHand);
+          if ($rootScope.blackJack.isResultOut) dealerFlipCard();
+          else if ($rootScope.blackJack.isDealerTurn) $scope.userStand();
       });
   }; //user's play
 
   $scope.userStand =  function (){
-      $scope.SharedGameData.isDealerTurn = true;
+      $rootScope.blackJack.isDealerTurn = true;
       dealerFlipCard();
-      if ($scope.SharedGameData.dealerHand.score >= 17){
+      if ($rootScope.blackJack.dealerHand.score >= 17){
           dealerStand();
       }else{
           dealerHit();
@@ -52,23 +51,23 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
           CardFactory.shuffleCards();
           needShuffle = false;
       }        
-      $scope.SharedGameData.outcome = ''; 
-      $scope.SharedGameData.userHand = {};
-      $scope.SharedGameData.dealerHand = {};
-      $scope.SharedGameData.userHand.score = 0;
-      $scope.SharedGameData.dealerHand.score = 0;
-      $scope.SharedGameData.isDealerTurn = false;
-      $scope.SharedGameData.isResultOut = false;
+      $rootScope.blackJack.outcome = ''; 
+      $rootScope.blackJack.userHand = {};
+      $rootScope.blackJack.dealerHand = {};
+      $rootScope.blackJack.userHand.score = 0;
+      $rootScope.blackJack.dealerHand.score = 0;
+      $rootScope.blackJack.isDealerTurn = false;
+      $rootScope.blackJack.isResultOut = false;
       holeCardImg = "./winner_logo.png";      
       // isPlaying = false; 
   };    
 
   var dealerHit = function (){
-      if ($scope.SharedGameData.dealerHand.score < 17){
+      if ($rootScope.blackJack.dealerHand.score < 17){
           CardFactory.getCards(1).then(function(response){
-              $scope.SharedGameData.dealerHand.cards = $scope.SharedGameData.dealerHand.cards.concat(response.cards);
-              $scope.SharedGameData.dealerHand.score = ResultService.getScore($scope.SharedGameData.dealerHand.cards);
-              if ($scope.SharedGameData.dealerHand.score >= 17){
+              $rootScope.blackJack.dealerHand.cards = $rootScope.blackJack.dealerHand.cards.concat(response.cards);
+              $rootScope.blackJack.dealerHand.score = ResultService.getScore($rootScope.blackJack.dealerHand.cards);
+              if ($rootScope.blackJack.dealerHand.score >= 17){
                   dealerStand();
                   return;
               }
@@ -78,12 +77,12 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
   }
 
   var dealerStand = function (){
-      ResultService.checkWinner($scope.SharedGameData.userHand, $scope.SharedGameData.dealerHand);
+      ResultService.checkWinner($rootScope.blackJack.userHand, $rootScope.blackJack.dealerHand);
   }
 
   var dealerFlipCard = function (){
-      let c = $scope.SharedGameData.dealerHand.cards[0].image;
-      $scope.SharedGameData.dealerHand.cards[0].image = holeCardImg;
+      let c = $rootScope.blackJack.dealerHand.cards[0].image;
+      $rootScope.blackJack.dealerHand.cards[0].image = holeCardImg;
       holeCardImg = c;
   }
 

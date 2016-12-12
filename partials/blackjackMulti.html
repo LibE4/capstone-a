@@ -1,34 +1,34 @@
-<div class="row" ng-show="!SharedRoomData.isRoomSet">
+<div class="row" ng-show="!blackJack.isRoomSet">
 	<form>
 			<label>Create Room:</label>
-	    <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="SharedRoomData.newRoom.profile.roomName" required>
+	    <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="blackJack.newRoom.profile.roomName" required>
 			<a href="" class="btn btn-lg btn-success col-xs-offset-1 col-xs-10" ng-click="createNewRoom()">Create</a>
 	</form>
 	<div class="form-group">
     <label for="sel1">Join Room:</label>
     <select ng-model="roomId" ng-click= "getRooms()" >
         <option value="">---</option>
-        <option ng-repeat="room in SharedRoomData.rooms" value="{{room.id}}">
+        <option ng-repeat="room in blackJack.rooms" value="{{room.id}}">
             {{room.profile.roomName}}</option>
     </select>
 		<a href="" class="btn btn-lg btn-primary col-xs-offset-1 col-xs-10" ng-click="joinRoom(roomId)">Join</a>
 	</div>
 </div>
-<div class="row" ng-show="SharedRoomData.isRoomSet">
-	<div id="dealerHand" ng-show="SharedRoomData.hasDealer">
+<div class="row" ng-show="blackJack.isRoomSet">
+	<div id="dealerHand" ng-show="blackJack.hasDealer">
 		Dealer:
-		<img width="120px" height="160px" ng-repeat="card in SharedRoomData.dealerHand.cards" src="{{card.image}}">
+		<img width="120px" height="160px" ng-repeat="card in blackJack.Players.Dealer.cards" src="{{card.image}}">
 	</div>
-	<div id="" ng-repeat="player in SharedRoomData.newRoom.profile.players" ng-show="SharedRoomData.isPlaying">
-		{{player}}:
-		<img width="120px" height="160px" ng-repeat="card in SharedRoomData.HumanPlayers[player].cards" src="{{card.image}}">
+	<div id="" ng-repeat="(k, v) in filterDealer(blackJack.newRoom.profile.players)" ng-show="blackJack.isPlaying">
+		{{k}}:
+		<img width="120px" height="160px" ng-repeat="card in blackJack.Players[k].cards" src="{{card.image}}">
 	</div>
-  <div id="yourStatus">{{SharedRoomData.outcome}}</div>
-	<div id="yourScore">{{user.username}}, your score: <span class="digits"> {{SharedRoomData.userHand.score}}</span></div>
+  <div id="yourStatus">{{blackJack.outcome}}</div>
+	<div id="yourScore">{{user.username}}, your score: <span class="digits"> {{blackJack.Players[user.username].score}}</span></div>
 	<div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
 	<div class="form-group">
 		<label>Your Bet</label>
-	  <input type="number" ng-model="SharedRoomData.bet" required>
+	  <input type="number" ng-model="blackJack.bet" required>
 	</div>
 	<button id="deal" ng-click="deal()">Deal</button>
 	<button id="hit" ng-click="userHit()">Hit</button>

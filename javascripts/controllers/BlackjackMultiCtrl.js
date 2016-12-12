@@ -1,8 +1,7 @@
 "use strict";
 
 app.controller("BlackjackMultiCtrl", function($scope, $rootScope, $routeParams, $location, CardFactory, RoomFactory, UserFactory, ResultService, RoomService){
-    $scope.SharedRoomData = RoomService.SharedRoomData;
-    $scope.SharedRoomData.hasDealer = true;
+    $rootScope.blackJack.hasDealer = true;
     RoomService.getRooms();
 
     $scope.getRooms = function(){
@@ -46,4 +45,13 @@ app.controller("BlackjackMultiCtrl", function($scope, $rootScope, $routeParams, 
         RoomService.resetDeal();
     };
 
+    $scope.filterDealer = function(players) {
+        var result = {};
+        angular.forEach(players, function(value, key) {
+            if (value !== 'Dealer') {
+                result[key] = value;
+            }
+        });
+        return result;
+    }
 });
