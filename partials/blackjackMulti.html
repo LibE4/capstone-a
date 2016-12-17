@@ -1,10 +1,20 @@
 <div class="row" ng-show="!blackJack.isRoomSet">
 	<form>
-			<label>Create Room:</label>
-	    <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="blackJack.newRoom.profile.roomName" required>
-			<a href="" class="btn btn-lg btn-success col-xs-offset-1 col-xs-10" ng-click="createNewRoom()">Create</a>
-	</form>
-	<div class="form-group">
+      <div>
+  			<label>Create Room:</label>
+  	    <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="blackJack.newRoom.profile.roomName" required>
+      </div>
+      <div ng-show="blackJack.hasDealer">
+        <label for="sel1">Maximum Players In Room:</label>
+        <select ng-model="blackJack.newRoom.profile.maxPlayers">
+            <option value="">---</option>
+            <option ng-repeat="totalNum in [3, 4, 5, 6]" value="{{totalNum}}">
+                {{totalNum}}</option>
+        </select>
+      </div>
+      <a href="" class="btn btn-lg btn-success col-xs-offset-1 col-xs-10" ng-click="createNewRoom()">Create</a>
+  </form>
+  <div class="form-group">
     <label for="sel1">Join Room:</label>
     <select ng-model="roomId" ng-click= "getRooms()" >
         <option value="">---</option>
@@ -13,26 +23,69 @@
     </select>
 		<a href="" class="btn btn-lg btn-primary col-xs-offset-1 col-xs-10" ng-click="joinRoom(roomId)">Join</a>
 	</div>
+  <div ng-show="!blackJack.isRoomAvailable">Sorry, this room is full! Please try another one.</div>
 </div>
-<div class="row" ng-show="blackJack.isRoomSet">
-	<div id="dealerHand" ng-show="blackJack.hasDealer">
-		Dealer:
-		<img width="120px" height="160px" ng-repeat="card in blackJack.Players.Dealer.cards" src="{{card.image}}">
+
+<div class="" ng-show="blackJack.isRoomSet">
+  <div id="dealerHand" class="row card-table col-xs-12" ng-show="blackJack.hasDealer">
+    <div class="Hand col-xs-2">
+  		Dealer:
+    </div>
+    <div class=" col-xs-10">
+  		<img width="90px" height="120px" ng-repeat="card in blackJack.Players.Dealer.cards" ng-src="{{card.image}}">
+    </div>
 	</div>
-	<div id="" ng-repeat="(k, v) in filterDealer(blackJack.newRoom.profile.players)" ng-show="blackJack.isPlaying">
-		{{k}}:
-		<img width="120px" height="160px" ng-repeat="card in blackJack.Players[k].cards" src="{{card.image}}">
-	</div>
-  <div id="yourStatus">{{blackJack.outcome}}</div>
-	<div id="yourScore">{{user.username}}, your score: <span class="digits"> {{blackJack.Players[user.username].score}}</span></div>
-	<div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
-	<div class="form-group">
-		<label>Your Bet</label>
-	  <input type="number" ng-model="blackJack.bet" required>
-	</div>
-	<button id="deal" ng-click="deal()">Deal</button>
-	<button id="hit" ng-click="userHit()">Hit</button>
-	<button id="stand" ng-click="userStand()">Stand</button>
-	<button id="reset" ng-click="resetDeal()">Clear Game Table</button>
-	<button id="leave" ng-click="leaveRoom()">Leave Room</button>
+	<div id="" class="row card-table col-xs-12" ng-repeat="(k, v) in filterDealer(blackJack.newRoom.profile.players)">
+    <div class="Hand col-xs-2">
+  		{{k}}:
+    </div>
+    <div class=" col-xs-10">
+  		<img width="90px" height="120px" ng-repeat="card in blackJack.Players[k].cards" ng-src="{{card.image}}">
+  	</div>
+  </div>
+
+  <div class="row card-ctrl">
+    <div class="col-xs-12">
+      <div id="yourStatus">{{blackJack.outcome}}</div>
+    	<div id="yourScore">{{user.username}}, your score: <span class="digits"> {{blackJack.Players[user.username].score}}</span></div>
+      <div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
+    </div>
+    <div class="bet form-group col-xs-12">
+      <label>Your Bet</label>
+      <input type="number" ng-model="blackJack.bet" required>
+    </div>
+    <div class="col-xs-12">
+      <button id="deal" class="btn btn-success col-xs-2" ng-click="deal()" ng-disabled="blackJack.newRoom.gameStatus.gameOn">Deal</button>
+      <button id="hit" class="btn btn-primary col-xs-2" ng-click="userHit()" ng-disabled="blackJack.standOn">Hit</button>
+      <button id="stand" class="btn btn-info col-xs-2" ng-click="userStand()" ng-disabled="blackJack.standOn">Stand</button>
+      <button id="clear" class="btn btn-warning col-xs-2" ng-click="resetDeal()">Reset Table</button>
+      <button id="leave" class="btn btn-danger col-xs-2" ng-click="leaveRoom()">Leave Room</button>
+    </div>
+  </div>
+
+  <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <main class="mdl-layout__content mdl-color--grey-100">
+      <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
+
+        <!-- Messages container -->
+        <div id="messages-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop">
+          <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+            <div id="messages" ng-repeat="msg in blackJack.roomMsgs | orderBy:time:true">
+              {{msg.name}}<span id="message-filler">: </span>{{msg.text}} </span>{{msg.time}}
+            </div>
+            <form id="message-form" action="#">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="message" ng-model="blackJack.newRoom.messages.msgText">
+              </div>
+              <button id="submit" class="btn btn-default" ng-click="send()">
+                Send
+              </button>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
 </div>

@@ -2,6 +2,7 @@
 
 app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $routeParams, $location, CardFactory, RoomFactory, UserFactory, ResultService, RoomService){
     $rootScope.blackJack.hasDealer = false;
+    $rootScope.blackJack.newRoom.profile.maxPlayers = 2;
     RoomService.getRooms();
 
     $scope.getRooms = function(){
@@ -13,7 +14,7 @@ app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $routeParams, $l
     };
 
     $scope.joinRoom = function(roomIdDOM){
-        RoomService.joinRoom(roomIdDOM);
+        RoomService.joinRoom(roomIdDOM, 2);
     };
 
     $scope.leaveRoom = function(){
@@ -45,5 +46,11 @@ app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $routeParams, $l
             }
         });
         return result;
-    }  
+    }; 
+
+    $scope.send = function(){
+        event.preventDefault();
+        RoomService.send();
+    };
+    
 });

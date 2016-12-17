@@ -1,25 +1,33 @@
-<div>
-	<div id="dealerHand" ng-show="blackJack.isPlaying">
+<div class="row card-table">
+	<div id="dealerHand" class="Hand col-xs-2">
 		Dealer Hand: <span ng-show="blackJack.isDealerTurn">{{blackJack.dealerHand.score}}</span>
-		<img width="120px" height="160px" ng-repeat="card in blackJack.dealerHand.cards" src="{{card.image}}">
 	</div>
-	<div id="yourHand" ng-show="blackJack.isPlaying">
+	<div class=" col-xs-10">
+		<img width="90px" height="120px" ng-repeat="card in blackJack.dealerHand.cards" ng-src="{{card.image}}">
+	</div>
+</div>
+<div class="row card-table">
+	<div id="yourHand" class="Hand  col-xs-2">
 		Your Hand: <span>{{blackJack.userHand.score}}</span>
-		<img width="120px" height="160px" ng-repeat="card in blackJack.userHand.cards" src="{{card.image}}">
 	</div>
-	<div class="form-group">
+	<div class=" col-xs-10">
+		<img width="90px" height="120px" ng-repeat="card in blackJack.userHand.cards" ng-src="{{card.image}}">
+	</div>
+</div>
+<div class="row card-ctrl">
+	<div class="col-xs-12">
+	  <div id="yourStatus">{{blackJack.outcome}}</div>
+		<div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
+	</div>
+	<div class="bet form-group col-xs-12">
 		<label>Your Bet</label>
     <input type="number" ng-model="blackJack.bet" required>
 	</div>
-	<button id="deal" ng-click="deal()">Deal</button>
-	<button id="hit" ng-click="userHit()">Hit</button>
-	<button id="stand" ng-click="userStand()">Stand</button>
-	<button id="clear" ng-click="resetDeal()">Clear Table</button>
-	<button id="leave" ng-click="leaveRoom()">Leave Room</button>
-<!-- 	<button id="deal" ng-show="!isPlaying" ng-click="deal()">Deal</button>
-	<button id="hit" ng-show="isPlaying" ng-click="userHit()">Hit</button>
-	<button id="stand" ng-show="isPlaying" ng-click="userStand()">Stand</button>
- -->	
-  <div id="yourStatus">{{blackJack.outcome}}</div>
-	<div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
+	<div class="col-xs-12">
+		<button id="deal" class="btn btn-success col-xs-2" ng-click="deal()" ng-disabled="gameOn">Deal</button>
+		<button id="hit" class="btn btn-primary col-xs-2" ng-click="userHit()" ng-disabled="standOn">Hit</button>
+		<button id="stand" class="btn btn-info col-xs-2" ng-click="userStand()" ng-disabled="standOn">Stand</button>
+		<button id="clear" class="btn btn-warning col-xs-2" ng-click="resetDeal()">Reset Table</button>
+		<button id="leave" class="btn btn-danger col-xs-2" ng-click="leaveRoom()">Leave Room</button>
+	</div>
 </div>

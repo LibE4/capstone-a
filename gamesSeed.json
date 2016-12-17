@@ -5,11 +5,19 @@
 			"username": "aa",
 			"balance" : 100,
 			"wins" : 0,
-			"losses" : 0
+			"losses" : 0,
+			"totalLines" : 0,
+			"totalShapes" : 0
 		}
 	},
 	"cardRooms":{
 		"cardRoom0":{
+			"player0":{},
+			"uid":"r9iuY23gvHgVNYwF1LOisoobZS72"
+		}
+	},
+	"tttRooms":{
+		"tttRoom0":{
 			"player0":{},
 			"uid":"r9iuY23gvHgVNYwF1LOisoobZS72"
 		}

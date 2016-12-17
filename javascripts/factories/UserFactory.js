@@ -9,7 +9,9 @@ app.factory("UserFactory", function($q, $http, FIREBASE_CONFIG){
 		  	username: authData.username,
 		  	balance: authData.balance,
 		  	wins: authData.wins,
-		  	losses: authData.losses
+		  	losses: authData.losses,
+		  	totalLines: authData.totalLines,
+		  	totalShapes: authData.totalShapes
 		  }))
 		  .success(function(storeUserSuccess){
 		  	resolve(storeUserSuccess);

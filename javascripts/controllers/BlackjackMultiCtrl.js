@@ -53,5 +53,10 @@ app.controller("BlackjackMultiCtrl", function($scope, $rootScope, $routeParams, 
             }
         });
         return result;
-    }
+    };
+
+    $scope.send = function(){
+        event.preventDefault();
+        RoomService.send();
+    };
 });

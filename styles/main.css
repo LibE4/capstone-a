@@ -2,70 +2,78 @@ body h1 {
   color: green;
   text-align: center; }
 
-.search-bar {
+.yourStats {
+  margin-top: 1em;
+  font-size: medium;
+  font-weight: bold; }
+
+.recharge {
+  margin-top: 3em;
+  border-top: 3px solid black; }
+
+.game-set {
+  margin-top: 3em; }
+
+.game-set ul a {
+  font-size: medium;
+  color: blue; }
+
+.card-table {
+  text-align: left;
+  height: 122px;
+  width: 800px;
+  border: 1px solid black; }
+
+.Hand {
+  height: 122px;
+  border-right: 1px solid black; }
+
+.bet {
+  margin-top: 1em; }
+
+#yourScore .digits {
+  font-weight: 700; }
+
+#wins {
+  color: #056B42; }
+
+#losses {
+  color: #F16D17; }
+
+#balance {
+  font-weight: bold;
+  color: blue; }
+
+#username {
+  font-style: italic;
+  font-weight: bolder;
+  color: purple; }
+
+#control {
+  background-color: #7887AB;
+  margin-top: 1em;
   text-align: center; }
-  .search-bar input {
-    margin-bottom: 20px; }
 
-#incomplete-tasks, #completed-tasks {
-  padding-left: 40px;
-  padding-right: 40px; }
+#ttt {
+  width: 600px;
+  height: 600px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+  margin-top: 3em; }
 
-.new-text-container {
-  padding: 20px 0px; }
+.blocks {
+  width: 30%;
+  height: 30%;
+  box-sizing: border-box;
+  border: 1px solid lightblue;
+  margin: auto;
+  text-align: center; }
 
-.newtodo-input {
-  padding-top: 5px; }
-
-.inputTask {
-  display: none;
-  width: 93%;
-  margin-left: 10px;
-  margin-top: 6px; }
-
-.inputLabel {
-  font-size: 18px;
-  line-height: 40px;
-  width: 237px;
-  padding: 0 0 0 11px; }
-
-.checkboxStyle {
-  margin-top: 15px !important; }
-
-h3 {
-  color: #333;
-  font-weight: 700;
-  font-size: 15px;
-  border-bottom: 2px solid #333;
-  padding: 30px 0 10px;
-  margin: 0; }
-
-li * {
-  float: left; }
-
-li, h3 {
-  clear: both;
-  list-style: none; }
-
-label[for='new-task'] {
-  display: block;
-  margin: 0 0 20px; }
-
-input#new-task {
-  float: left;
-  width: 318px; }
-
-li {
-  overflow: hidden;
-  padding: 20px 0;
-  border-bottom: 1px solid #eee; }
-
-#completed-tasks label {
-  text-decoration: line-through;
-  color: #888; }
-
-ul li.editMode input[type=text] {
-  display: block; }
-
-ul li.editMode label {
-  display: none; }
+.blocks:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%; }

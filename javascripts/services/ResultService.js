@@ -2,6 +2,9 @@
 
 app.service("ResultService", function($rootScope, UserFactory){
   $rootScope.blackJack = {};
+  $rootScope.blackJack.outcome = "";
+  $rootScope.blackJack.isResultOut = false;
+  $rootScope.blackJack.isDealerTurn = false;
   var that = this; // to make this accesible inside any function
 
   /* calculate score of the Hand */
@@ -40,13 +43,11 @@ app.service("ResultService", function($rootScope, UserFactory){
 	    	$rootScope.blackJack.isResultOut = true;
 		    if (userHand.score === 21){
 		        $rootScope.blackJack.outcome = "You tied!";
-		        // isPlaying = false; 
 		    }else {
 		        $rootScope.blackJack.outcome = "You lost!";
 		        $rootScope.user.losses++;
 		        $rootScope.user.balance -= $rootScope.blackJack.bet;
 		        UserFactory.editUser($rootScope.user);
-		        // isPlaying = false;
         } 
 	    } else if (userHand.score === 21){
 	    	$rootScope.blackJack.isDealerTurn = true;
@@ -63,7 +64,6 @@ app.service("ResultService", function($rootScope, UserFactory){
 		        $rootScope.user.losses++;
 		        $rootScope.user.balance -= $rootScope.blackJack.bet;
 		        UserFactory.editUser($rootScope.user);
-		        // isPlaying = false; 
 		    	}
 	    }
 	};
@@ -77,16 +77,13 @@ app.service("ResultService", function($rootScope, UserFactory){
 	        $rootScope.user.wins++;
 	        $rootScope.user.balance += $rootScope.blackJack.bet;
 	        UserFactory.editUser($rootScope.user);
-	        // isPlaying = false; 
 	    }else if (dealerHand.score > userHand.score){
 	        $rootScope.blackJack.outcome = "You lost!";
 	        $rootScope.user.losses++;
 	        $rootScope.user.balance -= $rootScope.blackJack.bet;
 	        UserFactory.editUser($rootScope.user);
-	        // isPlaying = false; 
 	    }else if (dealerHand.score === userHand.score){
 	        $rootScope.blackJack.outcome = "You tied!";
-	        // isPlaying = false; 
 	    }
 	};
 
@@ -121,16 +118,13 @@ app.service("ResultService", function($rootScope, UserFactory){
 		        $rootScope.user.wins++;
 		        $rootScope.user.balance += $rootScope.blackJack.bet;
 		        UserFactory.editUser($rootScope.user);
-		        // isPlaying = false; 
 		    }else if (rivalHand.score > userHand.score){
 		        $rootScope.blackJack.outcome = "You lost!";
 		        $rootScope.user.losses++;
 		        $rootScope.user.balance -= $rootScope.blackJack.bet;
 		        UserFactory.editUser($rootScope.user);
-		        // isPlaying = false; 
 		    }else if (rivalHand.score === userHand.score){
 		        $rootScope.blackJack.outcome = "You tied!";
-		        // isPlaying = false; 
 		    }
 		  } else {
 		        $rootScope.blackJack.outcome = "You both busted!";

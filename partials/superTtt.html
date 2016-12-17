@@ -1,0 +1,66 @@
+<header id="header" class="">
+  <h3>Super TIC TAC TOE Game!</h1>
+</header><!-- /header -->
+
+<div class="row" ng-show="!superTtt.isRoomSet">
+  <form>
+      <div>
+        <label>Create Room:</label>
+        <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="superTtt.newRoom.profile.roomName" required>
+      </div>
+      <a href="" class="btn btn-lg btn-success col-xs-offset-1 col-xs-10" ng-click="createNewRoom()">Create</a>
+  </form>
+  <div class="form-group">
+    <label for="sel1">Join Room:</label>
+    <select ng-model="roomId" ng-click= "getRooms()" >
+        <option value="">---</option>
+        <option ng-repeat="room in superTtt.rooms" value="{{room.id}}">
+            {{room.profile.roomName}}</option>
+    </select>
+    <a href="" class="btn btn-lg btn-primary col-xs-offset-1 col-xs-10" ng-click="joinRoom(roomId)">Join</a>
+  </div>
+  <div ng-show="!superTtt.isRoomAvailable">Sorry, this room is full! Please try another one.</div>
+</div>
+
+<div class="row" ng-show="superTtt.isRoomSet">
+  <div id="control" ng-show="!superTtt.newRoom.gameStatus.gameOn">
+    <section><label>Type a number for the grids you want to play: <input ng-model="nGrids" type="number" id="nGrids" name="nGrids"></label></section>
+    <section><label>Type a number for symbols in line to win (number 3-5 is recommended): <input ng-model="nSymbols" type="number" id="nSymbol" name="nSymbol"></label></section>
+    <section><button id="createGame" ng-click="initGame()">Create Game</button></section>
+  </div>
+  <div id="ttt" ng-click="handleEvents()"></div>
+  <div class="col-xs-12" ng-show="superTtt.newRoom.gameStatus.gameOn">
+      <div id="yourStatus">{{superTtt.outcome}}</div>
+  </div>
+  <div class="col-xs-12" ng-show="superTtt.newRoom.gameStatus.gameOn">
+    <button id="clear" class="btn btn-warning col-xs-2" ng-click="resetGame()">Reset Table</button>
+    <button id="leave" class="btn btn-danger col-xs-2" ng-click="leaveRoom()">Leave Room</button>
+  </div>
+
+
+  <div ng-show="superTtt.newRoom.gameStatus.gameOn" class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <main class="mdl-layout__content mdl-color--grey-100">
+      <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
+
+        <!-- Messages container -->
+        <div id="messages-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop">
+          <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+            <div id="messages" ng-repeat="msg in superTtt.roomMsgs | orderBy:time:true">
+              {{msg.name}}<span id="message-filler">: </span>{{msg.text}} </span>{{msg.time}}
+            </div>
+            <form id="message-form" action="#">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="message" ng-model="superTtt.newRoom.messages.msgText">
+              </div>
+              <button id="submit" class="btn btn-default" ng-click="send()">
+                Send
+              </button>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</div>

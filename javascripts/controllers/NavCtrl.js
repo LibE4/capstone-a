@@ -13,7 +13,7 @@ app.controller("NavCtrl", function($scope, $rootScope){
 		  }, 
 		  {
 		  	name:"Super Tic-Tac-Toe",
-		  	url:"#/game/superTTT"
+		  	url:"#/game/super Tic-Tac-Toe"
 		  }, 
 		  {
 		  	name:"Blackjack",
@@ -24,4 +24,8 @@ app.controller("NavCtrl", function($scope, $rootScope){
 		  	url:"#/game/home"
 		  } 
   	];
+
+  $scope.clearNav = function(){
+  	$rootScope.user = "";
+  };
 });

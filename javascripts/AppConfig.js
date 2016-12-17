@@ -49,13 +49,13 @@ app.config(function($routeProvider){
 				templateUrl: 'partials/blackjackMulti.html',
 				controller: 'BlackjackPtpCtrl'
 		})		
-		.when('/game/superTTT', {
-				templateUrl: 'partials/blackjack.html',
-				controller: 'BlackjackCtrl'
+		.when('/game/super Tic-Tac-Toe', {
+				templateUrl: 'partials/superTtt.html',
+				controller: 'SuperTttCtrl'
 		})		
 		.when('/game/tetris', {
-				templateUrl: 'partials/blackjack.html',
-				controller: 'BlackjackCtrl'
+				templateUrl: 'partials/tetris.html',
+				controller: 'TetrisCtrl'
 		})		
 		.when('/logout', {
 				templateUrl: 'partials/auth.html',
