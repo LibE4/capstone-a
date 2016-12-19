@@ -3,10 +3,11 @@
 app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, UserFactory){
 	$scope.loginContainer = true;
 	$scope.registerContainer = false;
-	// $scope.login = {
-	// 	email: "a@a.com",
-	// 	password: "123456"
-	// };
+  $scope.googleLoginContainer = false;
+	$scope.login = {
+		email: "a@a.com",
+		password: "123456"
+	};
 	
 
 	if($location.path() === "/logout"){
@@ -31,13 +32,13 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 	$scope.setLoginContainer = function(){
 		$scope.loginContainer = true;
 		$scope.registerContainer = false;
-
+    $scope.googleLoginContainer = false;
 	};
 
 	$scope.setRegisterContainer = function(){
 		$scope.loginContainer = false;
 		$scope.registerContainer = true;
-
+    $scope.googleLoginContainer = false;
 	};
 
   $scope.setGoogleLoginContainer = () => {

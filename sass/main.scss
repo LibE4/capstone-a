@@ -1,4 +1,9 @@
 body {
+  background-color: #9ED78F;
+  #auth {
+    background-color: #E3F4DE;
+    padding: 5px;
+  }
   h1 {
     color: green;  
     text-align: center;
@@ -89,6 +94,11 @@ body {
   display: inline-block;
   vertical-align: middle;
   height: 100%;
+}
+
+#canvasContainer {
+  background-color: black;
+  border: 3px solid grey;
 }
 
 

@@ -38,77 +38,27 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
             gameArea[r][c] = null;
         }
     }
-    var lineOfMerge = nGridY - 1, rowBuildup = nGridY - 1, totalLines = 0, totalShapes = 0, gameSpeed = 1, gapToNextLevel = 2;
-    gameSpeed = 2;
-    startAnimating(gameSpeed);
-    $scope.resetGame = function() {
-        console.log("reset tetris");
-        $location.url("/game/tetris");
-    };
-    
-    // gameArea manipulation methods
-    function mergeCurrentShape (){
-        for(let r = 0; r < currentShape.dh; r++){
-            for(let c = 0; c < currentShape.dw; c++){
-                if(currentShape.layout[r][c] === 1){
-                    gameArea[currentShape.dy + r][currentShape.dx + c] = currentShape.color;
-                }
-            }
-        }
-        lineOfMerge = currentShape.dy;
-        rowBuildup = (rowBuildup >= currentShape.dy) ? currentShape.dy : rowBuildup;
-        console.log("merge", lineOfMerge, rowBuildup);
-    }
-
-    function checkLineFilled(){
-        for(let r = 0; r < currentShape.dh; r++){
-            let lineFilled = true;
-            for (let c = 0; c < nGridX; c++){
-                if (gameArea[currentShape.dy + r][c] === null) {
-                    lineFilled = false;
-                    break;
-                }
-            }
-            if (lineFilled) {
-                totalLines++;
-                if ((totalLines + 1) % gapToNextLevel === 0 ) {
-                    gameSpeed += 0.2; // increase game speed
-                    console.log("gameSpeed", gameSpeed);
-                }
-                gameArea.splice(currentShape.dy + r, 1);
-                let line = [];
-                for (let c = 0; c< nGridX; c++){
-                    line[c] = null;
-                }
-                gameArea.unshift(line);
-            }
-        }
-    }
-
-    function makeNewShape(){
-        mergeCurrentShape();
-        checkLineFilled();
-        if (lineOfMerge !== 0 && lineOfMerge !== 1) {
-            totalShapes++;
-            randomNum = Math.floor(Math.random() * 7);
-            currentShape.dx = 3;
-            currentShape.dy = 0;
-            currentShape.layout = available_layouts[randomNum];
-            currentShape.dh = available_layouts[randomNum].length;
-            currentShape.dw = available_layouts[randomNum][0].length;
-            currentShape.color = available_colors[randomNum];
-            currentShape.angle = 0;
-        }
-    } 
+    var lineOfMerge = nGridY - 1, rowBuildup = nGridY - 1, totalLines = 0, totalShapes = 0;
+    var pauseGame = false, fps = 2, gapToNextLevel = 2;
+    // startAnimating(fps);
 
     // Keyboard Controls
     window.onkeydown = function() {
-        if (event.keyCode === 80 || event.keyCode === 13){
-            startAnimating(gameSpeed); // start game
+        if (event.keyCode === 13){
+            startAnimating(fps); // start game
+        } else if (event.keyCode === 80){
+            pauseGame = true;
+        } else if (event.keyCode === 78){
+            // stop game and refresh controller
+            pauseGame = true;
+            $location.url("/game/home");
+            $rootScope.$apply();
+            $location.url("/game/tetris");
         } else {
             keyboardAction.push(event.keyCode);
         }
     };
+
     function handleEvent() {
         for (let e = 0; e < keyboardAction.length; e++){
             switch(keyboardAction[e]) {
@@ -150,6 +100,104 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
         keyboardAction = [];
     }
 
+    // control requestAnimationFrame speed
+    var fpsInterval, startTime, now, then, elapsed;
+
+    // initialize the timer variables and start the animation
+    function startAnimating(fps) {
+      fpsInterval = 1000 / fps;
+      then = Date.now();
+      startTime = then;
+      animate();
+    }
+
+    // the animation loop calculates time elapsed since the last loop
+    // and only draws if your specified fps interval is achieved
+    function animate() {
+      // game stop control
+      if(lineOfMerge === 0 || lineOfMerge === 1) {
+        $rootScope.tetris.totalLines = totalLines;
+        $rootScope.tetris.totalShapes = totalShapes;
+        if ($rootScope.user.totalLines < totalLines) $rootScope.user.totalLines = totalLines;
+        if ($rootScope.user.totalShapes < totalShapes) $rootScope.user.totalShapes = totalShapes;
+        UserFactory.editUser($rootScope.user);
+        $rootScope.$apply();
+        return; // to stop game
+      } else if (pauseGame === true){
+        pauseGame = false;
+        return; // to stop game
+      }
+      // request another frame
+      requestAnimationFrame(animate);
+      // calc elapsed time since last loop
+      now = Date.now();
+      elapsed = now - then;
+      // if enough time has elapsed, draw the next frame
+      if (elapsed > fpsInterval) {
+        // Get ready for next frame by setting then=now, but also adjust for your
+        // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
+        then = now - (elapsed % fpsInterval);
+        //drawing code here
+        Game.run();
+      }
+    }
+    
+    // gameArea manipulation methods
+    function mergeCurrentShape (){
+        for(let r = 0; r < currentShape.dh; r++){
+            for(let c = 0; c < currentShape.dw; c++){
+                if(currentShape.layout[r][c] === 1){
+                    gameArea[currentShape.dy + r][currentShape.dx + c] = currentShape.color;
+                }
+            }
+        }
+        lineOfMerge = currentShape.dy;
+        rowBuildup = (rowBuildup >= currentShape.dy) ? currentShape.dy : rowBuildup;
+        console.log("merge", lineOfMerge, rowBuildup);
+    }
+
+    function checkLineFilled(){
+        for(let r = 0; r < currentShape.dh; r++){
+            let lineFilled = true;
+            for (let c = 0; c < nGridX; c++){
+                if (gameArea[currentShape.dy + r][c] === null) {
+                    lineFilled = false;
+                    break;
+                }
+            }
+            if (lineFilled) {
+                totalLines++;
+                if ((totalLines + 1) % gapToNextLevel === 0 ) {
+                    // increase game speed
+                    fps += 0.2;
+                    fpsInterval = 1000 / fps;
+                }
+                gameArea.splice(currentShape.dy + r, 1);
+                let line = [];
+                for (let c = 0; c< nGridX; c++){
+                    line[c] = null;
+                }
+                gameArea.unshift(line);
+            }
+        }
+    }
+
+    function makeNewShape(){
+        mergeCurrentShape();
+        checkLineFilled();
+        if (lineOfMerge !== 0 && lineOfMerge !== 1) {
+            totalShapes++;
+            randomNum = Math.floor(Math.random() * 7);
+            currentShape.dx = 3;
+            currentShape.dy = 0;
+            currentShape.layout = available_layouts[randomNum];
+            currentShape.dh = available_layouts[randomNum].length;
+            currentShape.dw = available_layouts[randomNum][0].length;
+            currentShape.color = available_colors[randomNum];
+            currentShape.angle = 0;
+        }
+    } 
+
     /* shape.js */
     // x, y: co-ordinate for draw; dx, dy: relative co-ordinate for drawBlocks layout
     var shape = function(dx, dy, layout, color){
@@ -189,46 +237,7 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
         }
     };
 
-    // control requestAnimationFrame speed
-    var fpsInterval, startTime, now, then, elapsed;
-
-    // initialize the timer variables and start the animation
-    function startAnimating(fps) {
-      fpsInterval = 1000 / fps;
-      then = Date.now();
-      startTime = then;
-      animate();
-    }
-
-    // the animation loop calculates time elapsed since the last loop
-    // and only draws if your specified fps interval is achieved
-    function animate() {
-      if(lineOfMerge === 0 || lineOfMerge == 1) {
-        console.log("totalLines", totalLines);
-        console.log("totalShapes", totalShapes);
-        $rootScope.tetris.totalLines = totalLines;
-        $rootScope.tetris.totalShapes = totalShapes;
-        $rootScope.user.totalLines = totalLines;
-        $rootScope.user.totalShapes = totalShapes;
-        UserFactory.editUser($rootScope.user);
-        $rootScope.$apply();
-        return; // to stop game
-      }
-      // request another frame
-      requestAnimationFrame(animate);
-      // calc elapsed time since last loop
-      now = Date.now();
-      elapsed = now - then;
-      // if enough time has elapsed, draw the next frame
-      if (elapsed > fpsInterval) {
-        // Get ready for next frame by setting then=now, but also adjust for your
-        // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
-        then = now - (elapsed % fpsInterval);
-        //drawing code here
-        Game.run();
-      }
-    }
-
+    // draw.js
     function drawBlock(dx, dy, color){
         Game.ctx.fillStyle = color;
         Game.ctx.fillRect(dx * gridSize, dy * gridSize, gridSize, gridSize);
@@ -256,6 +265,7 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
         }
     }
 
+    // clearance.js
     // no return statement needed, since argument is an object
     function setLayout(currentShape) {
         // rotate cw

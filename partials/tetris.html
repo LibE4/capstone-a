@@ -4,8 +4,22 @@
 
 <div class="row">
   <div class="col-xs-offset-4 col-xs-4">
-    <canvas id='myCanvas' width="200" height="400">
-    </canvas>
+    <div>Enter: start game</div>
+    <div>P: pause game</div>
+    <div>N: restart game</div>
+    <div>W: rotate counter clockwise</div>
+    <div>R: rotate clockwise</div>
+    <div>Left Arrow: move left</div>
+    <div>Left Arrow: move left</div>
+    <div>Right Arrow: move right</div>
+    <div>Down Arrow: move down faster</div>
+    <div>Spacebar: drop to bottom</div>
+    <div>Up Arrow: move up</div>
+  </div>
+  <div class="col-xs-offset-4 col-xs-4">
+    <div id="canvasContainer">
+      <canvas id='myCanvas' width="200" height="400"></canvas>
+    </div>
   </div>
 </div>
 
@@ -14,5 +28,4 @@
 		<div>You eliminated total lines <span id="wins">{{tetris.totalLines}}.</span></div>
 		<div>You consumed total shapes <span id="balance">{{tetris.totalShapes}}.</span></div>
 	</div>
-  <button id="replay" class="btn btn-lg btn-primary col-xs-2" ng-click="resetGame()">Replay</button>
 </div>

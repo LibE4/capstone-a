@@ -1,6 +1,11 @@
-body h1 {
-  color: green;
-  text-align: center; }
+body {
+  background-color: #9ED78F; }
+  body #auth {
+    background-color: #E3F4DE;
+    padding: 5px; }
+  body h1 {
+    color: green;
+    text-align: center; }
 
 .yourStats {
   margin-top: 1em;
@@ -77,3 +82,7 @@ body h1 {
   display: inline-block;
   vertical-align: middle;
   height: 100%; }
+
+#canvasContainer {
+  background-color: black;
+  border: 3px solid grey; }

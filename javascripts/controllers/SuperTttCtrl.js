@@ -1,35 +1,39 @@
 "use strict";
 
 app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $location, tttRoomFactory, UserFactory){
-    var thisPlayer = $rootScope.user.username;
-    $rootScope.superTtt = {};
-    $rootScope.superTtt.newRoom = {};
-    $rootScope.superTtt.newRoom.profile = {};
-    $rootScope.superTtt.newRoom.profile.players = {};
-    $rootScope.superTtt.newRoom.gameStatus = {};
-    $rootScope.superTtt.newRoom.gameStatus.clearTable = false;
-    $rootScope.superTtt.newRoom.gameStatus.initGame = false;
-    $rootScope.superTtt.newRoom.gameStatus.gameOn = false;
-    $rootScope.superTtt.newRoom.gameStatus.nGrids = 0;
-    $rootScope.superTtt.newRoom.gameStatus.nSymbols = 0;
-    $rootScope.superTtt.newRoom.gameData = {};
-    $rootScope.superTtt.newRoom.gameData.id = "";
-    $rootScope.superTtt.newRoom.gameData.player = "";
-    $rootScope.superTtt.rooms = {};
-    $rootScope.superTtt.isRoomSet = false; // for show/hide room setup page
-    $rootScope.superTtt.isRoomAvailable = true;
-    $rootScope.superTtt.Players = {};
-    var roomId = "";
-    var roomRef;
-    var numPlayers = 0;
-    $rootScope.superTtt.newRoom.messages = {};
-    $rootScope.superTtt.roomMsgs = [];
-    $rootScope.superTtt.newRoom.gameStatus.gameOn = false;
-    $rootScope.superTtt.standOn = false;
-    var n = $scope.nGrids;
-    var m = $scope.nSymbols;
-    var userHand = {};
-    var rivalHand = {};
+    var thisPlayer, roomId, roomRef, numPlayers, n, m, lastCheckedBy, userHand, rivalHand;
+    var initVariables = function(){
+        thisPlayer = $rootScope.user.username;
+        roomId = "";
+        roomRef = "";
+        numPlayers = 0;
+        n = 0;
+        m = 0;
+        lastCheckedBy = "";
+        userHand = {};
+        rivalHand = {};
+        $rootScope.superTtt = {};
+        $rootScope.superTtt.newRoom = {};
+        $rootScope.superTtt.newRoom.profile = {};
+        $rootScope.superTtt.newRoom.profile.players = {};
+        $rootScope.superTtt.newRoom.profile.initGame = false;
+        $rootScope.superTtt.newRoom.profile.gameOn = false;
+        $rootScope.superTtt.newRoom.profile.nGrids = 0;
+        $rootScope.superTtt.newRoom.profile.nSymbols = 0;
+        $rootScope.superTtt.newRoom.profile.minPlayerInRoom = 0;
+        $rootScope.superTtt.newRoom.gameStatus = {};
+        $rootScope.superTtt.newRoom.gameStatus.resetFlag = false;
+        $rootScope.superTtt.newRoom.gameData = {};
+        $rootScope.superTtt.newRoom.gameData.id = "";
+        $rootScope.superTtt.newRoom.gameData.player = "";
+        $rootScope.superTtt.rooms = {};
+        $rootScope.superTtt.isRoomSet = false; // for show/hide room setup page
+        $rootScope.superTtt.isRoomAvailable = true;
+        $rootScope.superTtt.Players = {};
+        $rootScope.superTtt.newRoom.messages = {};
+        $rootScope.superTtt.roomMsgs = [];
+    };
+    initVariables();
 
     // get room list
     $scope.getRooms = function(){
@@ -39,61 +43,70 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
         });
     };
 
+    var setRoomListener = function(roomId){
+        roomRef = firebase.database().ref(`tttRooms/${roomId}`);
+        roomRef.off();
+        roomRef.on('child_added', setRealtimeData);
+        roomRef.on('child_changed', setRealtimeData);
+    };
+
     //ttt room setup
     $scope.createNewRoom = function(){
-        $rootScope.superTtt.newRoom.profile.minPlayerInRoom = 0;
-        $rootScope.superTtt.newRoom.profile.players[thisPlayer] = thisPlayer;
+        initGame();
+        n = $rootScope.superTtt.newRoom.profile.nGrids;
+        m = $rootScope.superTtt.newRoom.profile.nSymbols;
         tttRoomFactory.postNewRoom($rootScope.superTtt.newRoom).then(function(response){
+            $rootScope.superTtt.isRoomSet = true;
             roomId = response.name;
-            $rootScope.superTtt.isRoomSet = true; 
+            createGame(n);
             sendMsg("SYSTEM", thisPlayer + " created the game!");
-            roomRef = firebase.database().ref(`tttRooms/${roomId}`);
-            roomRef.off();
-            roomRef.on('child_added', setRealtimeData);
-            roomRef.on('child_changed', setRealtimeData);
+            setRoomListener(roomId);
         });
     };
 
     $scope.joinRoom = function(roomIdDOM){
         roomId = roomIdDOM;
-          // console.log("roomId", roomId);
-        $rootScope.user.roomid = roomId;
         tttRoomFactory.getProfileInRoom(roomId).then(function(roomProfile){
             if (Object.keys(roomProfile.players).length >= 2){
                 $rootScope.superTtt.isRoomAvailable = false;
             } else {
+                tttRoomFactory.editGameStatus(roomId, $rootScope.superTtt.newRoom.gameStatus); // to assure gameStatus
                 $rootScope.superTtt.newRoom.profile = roomProfile;
                 $rootScope.superTtt.newRoom.profile.players[thisPlayer] = thisPlayer;
                 tttRoomFactory.editPlayerList(roomId, $rootScope.superTtt.newRoom.profile.players).then(function(){
-                    sendMsg("SYSTEM", thisPlayer + " joined the game!");
                     $rootScope.superTtt.isRoomSet = true; 
-                    // Reference to the /messages/ database path.
-                    roomRef = firebase.database().ref(`tttRooms/${roomId}`);
-                    roomRef.off();
-                    roomRef.on('child_added', setRealtimeData);
-                    roomRef.on('child_changed', setRealtimeData);
+                    n = roomProfile.nGrids;
+                    m = roomProfile.nSymbols;
+                    createGame(n);
+                    sendMsg("SYSTEM", thisPlayer + " joined the game!");
+                    setRoomListener(roomId);
                 });
             }
         });
     };
 
+    var cleanUp = function(){
+        initVariables();
+        displayElement.innerHTML = "";
+        $scope.getRooms();
+    };
+
     $scope.leaveRoom = function(){
         $rootScope.superTtt.isRoomSet = false; 
         numPlayers--;
-        console.log("numPlayers", numPlayers);
-        console.log("minPlayerInRoom", $rootScope.superTtt.newRoom.profile.minPlayerInRoom);
         if (numPlayers === $rootScope.superTtt.newRoom.profile.minPlayerInRoom){
             // no player in room
             tttRoomFactory.deleteRoom(roomId).then(function(){
-                $rootScope.superTtt.newRoom.profile.players = {};
+                roomRef.off();
+                cleanUp();
             });
         } else {
+            sendMsg("SYSTEM", thisPlayer + " left the game!");
+            $scope.initResetGame();
             delete $rootScope.superTtt.newRoom.profile.players[thisPlayer];
             tttRoomFactory.editPlayerList(roomId, $rootScope.superTtt.newRoom.profile.players).then(function(){
-                sendMsg("SYSTEM", thisPlayer + " left the game!");
-                $rootScope.superTtt.newRoom.profile.players = {};
-                $scope.resetGame();
-                $scope.getRooms();
+                roomRef.off();
+                cleanUp();
             });
         }        
     };
@@ -102,20 +115,19 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
     var setRealtimeData = function(data1, data2) {
         // console.log("data1", data1.val());
         let dataFB = data1.val();
-        if (dataFB.hasOwnProperty("initGame")) {
-            $rootScope.superTtt.newRoom.gameStatus = dataFB;
-            if (dataFB.initGame){
-                createGame(dataFB.nGrids);
+        if (dataFB.hasOwnProperty("resetFlag")) {
+            if (dataFB.resetFlag){
+                resetGame();
             }
         } else if (dataFB.hasOwnProperty("id")) {
             if (dataFB.id !== ""){
+                lastCheckedBy = dataFB.player;
                 showContent(dataFB);
             }
         } else if (dataFB.hasOwnProperty("text")) {
             $rootScope.superTtt.roomMsgs.push(dataFB);
         } else if (dataFB.hasOwnProperty("roomName")) {
             setPlayers(dataFB);
-            $scope.getRooms(); //update room info
         }
 
         $rootScope.$apply();
@@ -124,26 +136,25 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
     // process events
     $scope.handleEvents = function(){
         // console.log("target", event.target.id);
-        if (event.target.innerHTML === "") {
+        if (event.target.innerHTML === "" && lastCheckedBy !== thisPlayer) {
             $rootScope.superTtt.newRoom.gameData = { id: event.target.id, player: thisPlayer };
             tttRoomFactory.editGameData(roomId, $rootScope.superTtt.newRoom.gameData).then(function(){});
         }
     };
 
     // to create grids
-    $scope.initGame = function() {
-        $rootScope.superTtt.newRoom.gameStatus.initGame = true;
-        $rootScope.superTtt.newRoom.gameStatus.gameOn = true;
-        $rootScope.superTtt.newRoom.gameStatus.nGrids = $scope.nGrids;
-        $rootScope.superTtt.newRoom.gameStatus.nSymbols = $scope.nSymbols;
-        sendMsg("SYSTEM", thisPlayer + ` initiated a game of ${$scope.nGrids} grids and win by ${$scope.nSymbols} symbols in a row!`);
-        tttRoomFactory.editGameStatus(roomId, $rootScope.superTtt.newRoom.gameStatus).then(function(){});
+    var initGame = function() {
+        $rootScope.superTtt.newRoom.profile.players[thisPlayer] = thisPlayer;
+        $rootScope.superTtt.newRoom.profile.initGame = true;
+        $rootScope.superTtt.newRoom.profile.gameOn = true;
+        $rootScope.superTtt.newRoom.profile.nGrids = $scope.nGrids;
+        $rootScope.superTtt.newRoom.profile.nSymbols = $scope.nSymbols;
     };
 
+    let displayElement = document.getElementById("ttt");
+
     var createGame = function(n) {
-        while (displayElement.childNodes[1]) {
-          displayElement.removeChild(displayElement.childNodes[1]);
-        }
+        displayElement.innerHTML = "";
         for (let i = 1, gridSize = 95 / n; i <= n * n; i++) {
             let productElement = document.createElement("div");
             productElement.style.width = gridSize + "%";
@@ -152,11 +163,7 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
             productElement.className = "blocks";
             displayElement.appendChild(productElement);
         }
-        $scope.resetGame();
     };
-
-    let displayElement = document.getElementById("ttt");
-    let buttonCreateGame = document.getElementById("createGame");
 
     // to type in the grids
     function showContent(dataFB) {
@@ -166,31 +173,21 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
             targetEmt.style.color = "red";
             targetEmt.style.fontSize = "xx-large";
             checkStatus(dataFB.id, "x");
-            // player = "o";
         } else {
             targetEmt.innerHTML = "o";
             targetEmt.style.color = "blue";
             targetEmt.style.fontSize = "xx-large";
             checkStatus(dataFB.id, "o");
-            // player = "x";
         }
     }
 
     function checkStatus(elementId, c) {
         //get index of current item
         let blockIndex = parseInt(elementId.match(/\d+/g)[0]);
-        // while( (element = element.previousSibling) !== null ) {
-        //   blockIndex++; // from now blockIndex contains the index.
-        // }
-        n = $rootScope.superTtt.newRoom.gameStatus.nGrids;
-        m = $rootScope.superTtt.newRoom.gameStatus.nSymbols;
+        n = $rootScope.superTtt.newRoom.profile.nGrids;
+        m = $rootScope.superTtt.newRoom.profile.nSymbols;
         let arr = [];
         let x=0, y=0;
-        // while ((blockIndex - n) >0){
-        //     y += 1;
-        //     blockIndex -= n;
-        // }
-        // x = blockIndex;
         for(let i = 0; i < n; i++){
             arr[i] = [];    
             for(let j = 0; j < n; j++){ 
@@ -279,21 +276,25 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
     }
 
     function stopGame() {
-        // for (let i = 1; i <= n * n; i++) {
-        //     displayElement.childNodes[i].removeEventListener("click", showContent);
-        // }               
+        lastCheckedBy = thisPlayer;               
     }
 
-    $scope.resetGame = function() {
+    $scope.initResetGame = function() {
+        $rootScope.superTtt.newRoom.gameStatus.resetFlag = true;
+        $rootScope.superTtt.newRoom.gameData.id = "";
+        $rootScope.superTtt.newRoom.gameData.player = "";
+        tttRoomFactory.editRoom(roomId, $rootScope.superTtt.newRoom).then(function(){});
+    };
+
+    var resetGame = function() {
         for (let i = 1; i <= n * n; i++) {
             document.getElementById("grid-" + i).innerHTML = "";
         }
         $rootScope.superTtt.outcome = "";    
         $rootScope.superTtt.newRoom.gameData.id = "";
         $rootScope.superTtt.newRoom.gameData.player = "";
-        tttRoomFactory.editGameData(roomId, $rootScope.superTtt.newRoom.gameData).then(function(){});
-        $rootScope.$apply();
-
+        $rootScope.superTtt.roomMsgs = [];
+        $rootScope.superTtt.newRoom.gameStatus.resetFlag = false;
     };
 
     $scope.send = function(){

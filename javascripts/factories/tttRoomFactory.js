@@ -24,7 +24,8 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 			$http.post(`${FIREBASE_CONFIG.databaseURL}/tttRooms.json`,
 				JSON.stringify({
 					profile: newRoom.profile,
-					gameStatus: newRoom.gameStatus
+					gameStatus: newRoom.gameStatus,
+					gameData: newRoom.gameData
 				})
 			)
 			.success(function(postResponse){
@@ -49,11 +50,12 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 		});
 	};
 
-	var editRoom = function(editRoom, roomId){
+	var editRoom = function(roomId, editRoom){
 		return $q((resolve, reject) =>{
 			$http.put(`${FIREBASE_CONFIG.databaseURL}/tttRooms/${roomId}.json`,
 				JSON.stringify({
 					profile: editRoom.profile,
+					gameData: editRoom.gameData,
 					gameStatus: editRoom.gameStatus
 				})
 			)
@@ -119,6 +121,21 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 		});
 	};
 
+	var editGameReset = function(roomId, gameReset){
+		console.log("gameReset", gameReset);
+		return $q((resolve, reject) =>{
+			$http.put(`${FIREBASE_CONFIG.databaseURL}/tttRooms/${roomId}/gameReset.json`,
+				JSON.stringify(gameReset)
+			)
+			.success(function(editResponse){
+				resolve(editResponse);
+			})
+			.error(function(errorResponse){
+				reject(errorResponse);
+			});
+		});
+	};
+
 	var editGameData = function(roomId, gameData){
 		console.log("gameData", gameData);
 		return $q((resolve, reject) =>{
@@ -170,6 +187,7 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 					getProfileInRoom: getProfileInRoom,
 					getGameStatus: getGameStatus,
 					editGameStatus: editGameStatus,
+					editGameReset: editGameReset,
 					editGameData: editGameData,
 					postTttInRoom: postTttInRoom,
 					postMsgInRoom: postMsgInRoom};

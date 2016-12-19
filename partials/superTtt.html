@@ -8,6 +8,8 @@
         <label>Create Room:</label>
         <input type="text" class="col-xs-offset-1 col-xs-10" placeholder="room name" ng-model="superTtt.newRoom.profile.roomName" required>
       </div>
+      <section><label>Type a number for the grids you want to play: <input ng-model="nGrids" type="number" id="nGrids" name="nGrids"></label></section>
+      <section><label>Type a number for symbols in line to win (number 3-5 is recommended): <input ng-model="nSymbols" type="number" id="nSymbol" name="nSymbol"></label></section>
       <a href="" class="btn btn-lg btn-success col-xs-offset-1 col-xs-10" ng-click="createNewRoom()">Create</a>
   </form>
   <div class="form-group">
@@ -23,22 +25,17 @@
 </div>
 
 <div class="row" ng-show="superTtt.isRoomSet">
-  <div id="control" ng-show="!superTtt.newRoom.gameStatus.gameOn">
-    <section><label>Type a number for the grids you want to play: <input ng-model="nGrids" type="number" id="nGrids" name="nGrids"></label></section>
-    <section><label>Type a number for symbols in line to win (number 3-5 is recommended): <input ng-model="nSymbols" type="number" id="nSymbol" name="nSymbol"></label></section>
-    <section><button id="createGame" ng-click="initGame()">Create Game</button></section>
-  </div>
   <div id="ttt" ng-click="handleEvents()"></div>
-  <div class="col-xs-12" ng-show="superTtt.newRoom.gameStatus.gameOn">
+  <div class="col-xs-12">
       <div id="yourStatus">{{superTtt.outcome}}</div>
   </div>
-  <div class="col-xs-12" ng-show="superTtt.newRoom.gameStatus.gameOn">
-    <button id="clear" class="btn btn-warning col-xs-2" ng-click="resetGame()">Reset Table</button>
+  <div class="col-xs-12">
+    <button id="clear" class="btn btn-warning col-xs-2" ng-click="initResetGame()">Reset Table</button>
     <button id="leave" class="btn btn-danger col-xs-2" ng-click="leaveRoom()">Leave Room</button>
   </div>
 
 
-  <div ng-show="superTtt.newRoom.gameStatus.gameOn" class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <main class="mdl-layout__content mdl-color--grey-100">
       <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
 
