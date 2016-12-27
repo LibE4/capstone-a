@@ -1,33 +1,40 @@
-<div class="row card-table">
-	<div id="dealerHand" class="Hand col-xs-2">
-		Dealer Hand: <span ng-show="blackJack.isDealerTurn">{{blackJack.dealerHand.score}}</span>
-	</div>
-	<div class=" col-xs-10">
-		<img width="90px" height="120px" ng-repeat="card in blackJack.dealerHand.cards" ng-src="{{card.image}}">
-	</div>
-</div>
-<div class="row card-table">
-	<div id="yourHand" class="Hand  col-xs-2">
-		Your Hand: <span>{{blackJack.userHand.score}}</span>
-	</div>
-	<div class=" col-xs-10">
-		<img width="90px" height="120px" ng-repeat="card in blackJack.userHand.cards" ng-src="{{card.image}}">
-	</div>
-</div>
-<div class="row card-ctrl">
-	<div class="col-xs-12">
-	  <div id="yourStatus">{{blackJack.outcome}}</div>
-		<div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
-	</div>
-	<div class="bet form-group col-xs-12">
-		<label>Your Bet</label>
-    <input type="number" ng-model="blackJack.bet" required>
-	</div>
-	<div class="col-xs-12">
-		<button id="deal" class="btn btn-success col-xs-2" ng-click="deal()" ng-disabled="gameOn">Deal</button>
-		<button id="hit" class="btn btn-primary col-xs-2" ng-click="userHit()" ng-disabled="standOn">Hit</button>
-		<button id="stand" class="btn btn-info col-xs-2" ng-click="userStand()" ng-disabled="standOn">Stand</button>
-		<button id="clear" class="btn btn-warning col-xs-2" ng-click="resetDeal()">Reset Table</button>
-		<button id="leave" class="btn btn-danger col-xs-2" ng-click="leaveRoom()">Leave Room</button>
+<div class="blackjack">
+	<h1>BlackJack Single Game</h1>
+	<div class="row card-game">
+		<div class="col-xs-8 col-xs-offset-2 card-table">
+			<div id="dealerHand" class="Hand col-xs-2">
+				Dealer: <span ng-show="blackJack.isDealerTurn">{{blackJack.dealerHand.score}}</span>
+	      <img alt="User Pic" src="img/dealer.jpeg" class="img-round">
+			</div>
+			<div class=" col-xs-10">
+				<img width="90px" height="120px" ng-repeat="card in blackJack.dealerHand.cards" ng-src="{{card.image}}">
+			</div>
+		</div>
+		<div class="col-xs-8 col-xs-offset-2 card-table">
+			<div id="yourHand" class="Hand  col-xs-2">
+				{{user.username}}: <span id="yourScore">{{blackJack.userHand.score}}</span>
+	      <img alt="User Pic" src="img/user-default.png" class="img-round">
+			</div>
+			<div class=" col-xs-10">
+				<img width="90px" height="120px" ng-repeat="card in blackJack.userHand.cards" ng-src="{{card.image}}">
+			</div>
+		</div>
+		<div class="col-xs-6 col-xs-offset-4 single-card-ctrl">
+			<div class="col-xs-12">
+			  <div id="yourStatus" animate-on-change="blackJack.outcome">{{blackJack.outcome}}</div>
+				<div id="yourRecord">Your Record: <span id="wins">{{user.wins}}</span>&nbsp;/&nbsp;<span id="losses">{{user.losses}}</span>, Your Balance: <span id="balance">{{user.balance}}</span></div>
+			</div>
+			<div class="bet form-group col-xs-12">
+				<label>Set Bet: </label>
+		    <input type="number" ng-model="blackJack.bet" required>
+			</div>
+			<div class="col-xs-12">
+				<button id="deal" class="btn btn-success col-xs-2" ng-click="deal()" ng-disabled="gameOn">Deal</button>
+				<button id="hit" class="btn btn-primary col-xs-2" ng-click="userHit()" ng-disabled="standOn">Hit</button>
+				<button id="stand" class="btn btn-info col-xs-2" ng-click="userStand()" ng-disabled="standOn">Stand</button>
+				<button id="clear" class="btn btn-warning col-xs-2" ng-click="resetDeal()">New Game</button>
+				<button id="leave" class="btn btn-danger col-xs-2" ng-click="leaveRoom()">Leave Game</button>
+			</div>
+		</div>
 	</div>
 </div>

@@ -1,105 +1,344 @@
-body {
-  background-color: #9ED78F;
-  #auth {
-    background-color: #E3F4DE;
-    padding: 5px;
-  }
-  h1 {
-    color: green;  
-    text-align: center;
-  }
+.btn-custom {
+  background-color: hsl(137, 14%, 25%) !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d3ded6", endColorstr="#36483b");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#d3ded6), to(#36483b));
+  background-image: -moz-linear-gradient(top, #d3ded6, #36483b);
+  background-image: -ms-linear-gradient(top, #d3ded6, #36483b);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d3ded6), color-stop(100%, #36483b));
+  background-image: -webkit-linear-gradient(top, #d3ded6, #36483b);
+  background-image: -o-linear-gradient(top, #d3ded6, #36483b);
+  background-image: linear-gradient(#d3ded6, #36483b);
+  border-color: #36483b #36483b hsl(137, 14%, 10%);
+  color: #333 !important;
+  font-weight: bold !important;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.99);
+  -webkit-font-smoothing: antialiased;
 }
 
-.yourStats {
-  margin-top: 1em;
-  font-size: medium;
-  font-weight: bold;
-}
-
-.recharge {
-  margin-top: 3em;
-  border-top: 3px solid black;
-}
-
-.game-set {
-  margin-top: 3em;
-}
-.game-set ul a{
-  font-size: medium;
-  color: blue;
-}
-
-.card-table {
-  text-align: left;
-  height: 122px;
-  width: 800px;
-  border: 1px solid black;
-}
-
-// .card-single button {
-//   margin: 0.5em 1.5em;
-// }
-
-.Hand {
-  height: 122px;
-  border-right:  1px solid black;
-}
-
-.bet {
-  margin-top: 1em;
-}
-
-#yourScore .digits {font-weight:700}
-#wins {color:#056B42;}
-#losses {color:#F16D17;}
-#balance {
-  font-weight: bold;
-  color: blue;
-}
-#username {
-  font-style: italic;
-  font-weight: bolder;
-  color: purple;
-}
-
-// superTtt
-#control {
-  background-color: #7887AB;
-  margin-top: 1em;
-  text-align: center;
-}
-
-#ttt {
-  width: 600px;
-  height: 600px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: space-between;
-  margin-top: 3em;
-}
-
-.blocks {
-  width: 30%;
-  height: 30%;
-  box-sizing: border-box;
-  border: 1px solid lightblue;
-  margin: auto;
-  text-align: center;
-}
-
-.blocks:before {
-  content: "";
-  display: inline-block;
-  vertical-align: middle;
+html, body
+{
   height: 100%;
 }
 
-#canvasContainer {
-  background-color: black;
-  border: 3px solid grey;
+body {
+  background-color: #202020;
+  input {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  h1, h2 {
+    color: #CCCECB;  
+    text-align: center;
+  }
+
+  .partial-container {
+    height: 100%
+  }
+
+  .row {
+    margin: 0;
+    padding: 0;
+  }
+
+  // auth
+  #auth {
+    margin-top: 5em;
+    background-color: #CCCECB;
+    border-radius: 5px;
+    label {
+      margin-left: 3em;
+      color: #202020;
+    }
+  }
+  
+  // navbar
+  .navbar {
+    background-color: #889a78;
+    margin-bottom: 0;
+    .navbar-brand {
+      color: rgba(0, 0, 0, 0.5);
+      font-style: italic;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .navbar-nav>li>a {
+      color: #CCCECB;
+      font-weight: bold;
+    }
+  }
+
+  // home
+  #home {
+    .home-header {
+      text-align: center;
+      padding-bottom: 2em;
+      margin-bottom: 3em;
+      border-bottom: 3px solid #CCCECB;
+    }
+
+    #username {
+      font-style: italic;
+      font-weight: bolder;
+      color: white;
+    }
+
+    .thumbnail {
+      border-width: 5px;
+      border-style: inset;
+      img {
+        width: 200px;
+        height: 200px;
+      }
+      h4 {
+        color: rgba(0, 0, 0, 0.5);  
+        text-align: center;
+      }
+    }
+  }
+
+  // profile
+  #profile-container {
+    .panel {
+      background-color: #CCCECB;
+    }
+
+    h3 {
+      text-align: center;
+      background-color: #889A78;
+      margin-top: 0;
+    }
+
+    .recharge-container {
+      border-top: 3px solid #CCCECB;
+      margin-top: 1em;
+      padding: 0;
+    }
+
+    .recharge {
+      border-radius: 3px;
+      text-align: center;
+      margin-top: 2em;
+      padding: 0 15px 15px;
+      margin-bottom: 1em;
+      background-color: #CCCECB;
+    }
+  }
+
+  // gomoku
+  #sg-container {
+    color: #CCCECB;
+    height: 100%;
+    #sg-setup {
+      padding: 0;
+      font-weight: bold;
+      font-size: large;
+      .row {
+        padding: 3em 1em;
+        border-top: 3px solid #CCCECB;
+      }
+    }
+
+    #sg-game {
+      margin-top: 3em;
+      .panel-title{
+        background-color: #CCCECB;
+      }
+      h3, #yourStatus {
+        text-align: center;
+        color: rgba(0, 0, 0, 0.5);
+      }
+      .btn {
+        width: 250px;
+      }
+      img {
+        height: 100px;
+      }
+      .winner_logo {
+        margin-left: 70px;
+      }
+    }
+
+    #ttt {
+      background: #FFA700;
+      border: 3px ridge white;
+      width: 500px;
+      height: 500px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-content: space-between;
+      padding: 1em;
+    }
+
+    .blocks {
+      box-sizing: border-box;
+      border: 1px solid black;
+      margin: auto;
+      text-align: center;
+    }
+
+    .blocks:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      height: 100%;
+    }
+    .messages-card {
+      margin-top: 0;
+    }
+  }
+
+
+  // tetris
+  #tetris-container {
+    .row {
+      margin-bottom: 3em;
+    }
+
+    .table-key-info {
+      border-radius: 3px;
+      background-color: #CCCECB;
+      font-weight: bold;
+    }
+
+    #username {
+      margin-left: 2em;
+    }
+
+    thead {
+      background-color: #5CA61E;
+      color: #CCCECB;
+    }
+
+    #myCanvas {
+      background-color: black;
+      border: 3px solid grey;
+      margin: 0 auto;
+    }
+
+    .panel-title{
+      text-align: center;
+      background-color: #CCCECB;
+    }
+
+  }
+
+  // card game
+  .blackjack {
+    .yourStats {
+      margin-top: 1em;
+      font-size: medium;
+      font-weight: bold;
+    }
+
+    .game-set {
+      ul {
+        margin-top: 3em;
+      }
+    }
+
+    #cardgame-setup {
+      padding: 0;
+      color: #CCCECB;
+      font-weight: bold;
+      font-size: large;
+      .row {
+        padding: 3em 1em;
+        border-top: 3px solid #CCCECB;
+      }
+    }
+
+    .card-game {
+      margin-top: 3em;
+      color: #CCCECB;
+      .card-table {
+        padding: 0;
+        background-color: #A4A4A4;
+        text-align: left;
+        height: 122px;
+        // width: 800px;
+        border: 1px solid white;
+      }
+      .Hand {
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+        background-color: white;
+        text-align: center;
+        border:  1px solid #5CA61E;
+        border-right:  2px solid #5CA61E;
+        img {
+          height: 100px;
+        }
+      }
+    }
+  }
+
+  .messages-card {
+    color: rgba(0, 0, 0, 0.5);
+    background-color: white;
+    margin-top: 1.5em;
+    #messages {
+      border-top: 1px groove grey;
+      border-bottom: 1px groove grey;
+      height: 300px;
+      overflow: auto;
+    }
+    form {
+      text-align: center;
+      margin-top: 1em;
+    }
+  }
+
+  .bet {
+    margin-top: 1em;
+  }
+
+  #yourScore, #yourStatus, #yourRecord {font-weight:700}
+  #wins {color:#056B42;}
+  #losses {color:#F16D17;}
+  #balance {
+    font-weight: bold;
+    color: #68E600;
+  }
+
+  #username {
+    font-style: italic;
+    font-weight: bolder;
+    color: #5CA61E;
+  }
+
+  #time {
+    font-style: italic;
+    font-size: x-small;
+  }
+
+  .single-card-ctrl {
+    margin-top: 1em;
+  }
+
+  .flip {
+    padding: 1em;
+    font: bold;
+    color: red;
+  }
+
+  .caption {
+    border: 1px solid white;
+    background-color: #CCCECB;
+    color: #5ca61e;
+    font-size: medium;
+    word-break: break-all;
+    white-space: normal;
+  }
+
+  .instruction {
+    text-align: center;
+    background-color: #5CA61E;
+    color: #CCCECB;
+    margin-bottom: 1em;
+  }  
 }
-
-
 

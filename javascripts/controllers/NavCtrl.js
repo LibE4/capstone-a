@@ -12,12 +12,16 @@ app.controller("NavCtrl", function($scope, $rootScope){
 		  	url:"#/game/tetris"
 		  }, 
 		  {
-		  	name:"Super Tic-Tac-Toe",
-		  	url:"#/game/super Tic-Tac-Toe"
+		  	name:"Super Gomoku",
+		  	url:"#/game/super gomoku"
 		  }, 
 		  {
 		  	name:"Blackjack",
 		  	url:"#/game/blackjack"
+		  } , 
+		  {
+		  	name:"User Profile",
+		  	url:"#/game/user profile"
 		  } , 
 		  {
 		  	name:"Home",

@@ -10,11 +10,10 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
   $rootScope.blackJack.isDealerTurn = false; 
   $rootScope.blackJack.isResultOut = false; 
   var needShuffle = false;    
-  var holeCardImg = "./buffy.jpg";
+  var holeCardImg = "img/buffy.jpg";
   // var holeCardImg = "./winner_logo.png";
   $scope.gameOn = false;
   $scope.standOn = false;
-
 
   $scope.deal = function (){
     $scope.gameOn = true;
@@ -25,7 +24,7 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
         // dealer hide first card
         dealerFlipCard();
         ResultService.checkDeal($rootScope.blackJack.userHand, $rootScope.blackJack.dealerHand);
-        if ($rootScope.blackJack.isResultOut) dealerFlipCard();
+        if ($rootScope.blackJack.isResultOut) { dealerFlipCard(); voice(); }
         else if ($rootScope.blackJack.isDealerTurn) $scope.userStand();
     });
   }; //start to play
@@ -34,7 +33,7 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
       CardFactory.getCards(1).then(function(response){
           $rootScope.blackJack.userHand.cards = $rootScope.blackJack.userHand.cards.concat(response.cards);
           ResultService.checkUserHit($rootScope.blackJack.userHand);
-          if ($rootScope.blackJack.isResultOut) dealerFlipCard();
+          if ($rootScope.blackJack.isResultOut) { dealerFlipCard(); voice(); }
           else if ($rootScope.blackJack.isDealerTurn) $scope.userStand();
       });
   }; //user's play
@@ -62,7 +61,7 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
     $rootScope.blackJack.dealerHand.score = 0;
     $rootScope.blackJack.isDealerTurn = false;
     $rootScope.blackJack.isResultOut = false;
-    holeCardImg = "./buffy.jpg";      
+    holeCardImg = "img/buffy.jpg";      
     // holeCardImg = "./winner_logo.png";      
     $scope.gameOn = false;
     $scope.standOn = false;
@@ -84,6 +83,7 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
 
   var dealerStand = function (){
       ResultService.checkWinner($rootScope.blackJack.userHand, $rootScope.blackJack.dealerHand);
+      voice();
   };
 
   var dealerFlipCard = function (){
@@ -95,6 +95,12 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
   $scope.leaveRoom = function(){
       $location.url("/game/blackjack");
       $scope.resetDeal();
+  };
+
+  var msg = new SpeechSynthesisUtterance();
+  var voice = function(){
+    msg.text = $rootScope.blackJack.outcome;
+    window.speechSynthesis.speak(msg);
   };
 
 });

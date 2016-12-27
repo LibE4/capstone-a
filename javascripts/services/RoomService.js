@@ -1,6 +1,6 @@
 "use strict";
 
-app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFactory, ResultService){
+app.service("RoomService", function($rootScope, CardFactory, RoomFactory, ResultService){
     var thisPlayer = $rootScope.user.username;
     $rootScope.blackJack.newRoom = {};
     $rootScope.blackJack.newRoom.profile = {};
@@ -19,7 +19,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
     var roomRef;
     var numPlayers = 0;
     var needShuffle = false;
-    var holeCardImg = "./buffy.jpg";
+    var holeCardImg = "img/buffy.jpg";
     // var holeCardImg = "./winner_logo.png";
     var origCardImg = "";
     var dealerHand = {};
@@ -36,6 +36,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
         RoomFactory.getRooms().then((response) => {
             $rootScope.blackJack.rooms = response;
             console.log("rooms response", response);
+            $rootScope.blackJack.isRoomAvailable = true; //reset flag
         });
     };
 
@@ -109,6 +110,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
             let card = dataFB;
             // process cards received
             $rootScope.blackJack.Players[card.username].cards.push(card);
+            getPlayerScore(card.username);
             if (card.username === "Dealer") {
                 switch (dealerHand.cards.length){
                     case 1:
@@ -272,7 +274,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
         }
         $rootScope.blackJack.Players[thisPlayer].score = 0;
         $rootScope.blackJack.standOn = false;
-        holeCardImg = "./buffy.jpg";
+        holeCardImg = "img/buffy.jpg";
         // holeCardImg = "./winner_logo.png";
         origCardImg = "";
         $rootScope.blackJack.roomMsgs = [];
@@ -308,6 +310,10 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, UserFa
                 else rivalHand = $rootScope.blackJack.Players[player];
             }
         }
+    };
+
+    var getPlayerScore = function (player){
+        $rootScope.blackJack.Players[player].score = ResultService.getScore($rootScope.blackJack.Players[player].cards);
     };
 
     this.send = function(){

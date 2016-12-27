@@ -53,6 +53,8 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 			registerNewUser.balance = 0;
 			registerNewUser.wins = 0;
 			registerNewUser.losses = 0;
+			registerNewUser.sgWins = 0;
+			registerNewUser.sgLosses = 0;
 			registerNewUser.totalLines = 0;
 			registerNewUser.totalShapes = 0;
 			return UserFactory.addUser(registerNewUser);
@@ -77,6 +79,8 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 						balance : 100,
 						wins : 0,
 						losses : 0,
+						sgWins : 0,
+						sgLosses : 0,
 						totalLines : 0,
 						totalShapes : 0
 	        };

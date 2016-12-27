@@ -33,6 +33,10 @@ app.config(function($routeProvider){
 				templateUrl: 'partials/home.html',
 				controller: 'HomeCtrl'
 		})
+		.when('/game/user profile', {
+				templateUrl: 'partials/profile.html',
+				controller: 'HomeCtrl'
+		})
 		.when('/game/blackjack', {
 				templateUrl: 'partials/blackjack.html',
 				controller: 'BlackjackCtrl'
@@ -49,7 +53,7 @@ app.config(function($routeProvider){
 				templateUrl: 'partials/blackjackMulti.html',
 				controller: 'BlackjackPtpCtrl'
 		})		
-		.when('/game/super Tic-Tac-Toe', {
+		.when('/game/super gomoku', {
 				templateUrl: 'partials/superTtt.html',
 				controller: 'SuperTttCtrl'
 		})		

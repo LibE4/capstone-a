@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $routeParams, $location, CardFactory, RoomFactory, UserFactory, ResultService, RoomService){
+app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $location, RoomService){
     $rootScope.blackJack.hasDealer = false;
     $rootScope.blackJack.newRoom.profile.maxPlayers = 2;
     RoomService.getRooms();
@@ -51,6 +51,5 @@ app.controller("BlackjackPtpCtrl", function($scope, $rootScope, $routeParams, $l
     $scope.send = function(){
         event.preventDefault();
         RoomService.send();
-    };
-    
+    };    
 });

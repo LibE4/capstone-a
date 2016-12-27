@@ -6,6 +6,8 @@
 			"balance" : 100,
 			"wins" : 0,
 			"losses" : 0,
+			"sgWins" : 0,
+			"sgLosses" : 0,
 			"totalLines" : 0,
 			"totalShapes" : 0
 		}

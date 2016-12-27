@@ -1,17 +1,20 @@
 "use strict";
 
-app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $location, tttRoomFactory, UserFactory){
-    var thisPlayer, roomId, roomRef, numPlayers, n, m, lastCheckedBy, userHand, rivalHand;
+app.controller("SuperTttCtrl", function($scope, $rootScope, tttRoomFactory, UserFactory){
+    var thisPlayer, roomId, roomRef, numPlayers, n, m, gameCreator;
     var initVariables = function(){
         thisPlayer = $rootScope.user.username;
+        gameCreator = "";
         roomId = "";
         roomRef = "";
         numPlayers = 0;
         n = 0;
         m = 0;
-        lastCheckedBy = "";
-        userHand = {};
-        rivalHand = {};
+        $scope.nGrids = 15;
+        $scope.nSymbols = 4;
+        $scope.userHand = "";
+        $scope.rivalHand = "";
+        $scope.lastCheckedBy = "";
         $rootScope.superTtt = {};
         $rootScope.superTtt.newRoom = {};
         $rootScope.superTtt.newRoom.profile = {};
@@ -39,7 +42,6 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
     $scope.getRooms = function(){
         tttRoomFactory.getRooms().then((response) => {
             $rootScope.superTtt.rooms = response;
-            console.log("rooms response", response);
         });
     };
 
@@ -58,6 +60,8 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
         tttRoomFactory.postNewRoom($rootScope.superTtt.newRoom).then(function(response){
             $rootScope.superTtt.isRoomSet = true;
             roomId = response.name;
+            $scope.lastCheckedBy = thisPlayer;
+            gameCreator = thisPlayer;
             createGame(n);
             sendMsg("SYSTEM", thisPlayer + " created the game!");
             setRoomListener(roomId);
@@ -113,7 +117,6 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
 
     // to sync cards, players in same room
     var setRealtimeData = function(data1, data2) {
-        // console.log("data1", data1.val());
         let dataFB = data1.val();
         if (dataFB.hasOwnProperty("resetFlag")) {
             if (dataFB.resetFlag){
@@ -121,7 +124,7 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
             }
         } else if (dataFB.hasOwnProperty("id")) {
             if (dataFB.id !== ""){
-                lastCheckedBy = dataFB.player;
+                $scope.lastCheckedBy = dataFB.player;
                 showContent(dataFB);
             }
         } else if (dataFB.hasOwnProperty("text")) {
@@ -135,8 +138,7 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
 
     // process events
     $scope.handleEvents = function(){
-        // console.log("target", event.target.id);
-        if (event.target.innerHTML === "" && lastCheckedBy !== thisPlayer) {
+        if (event.target.innerHTML === "" && $scope.lastCheckedBy !== thisPlayer) {
             $rootScope.superTtt.newRoom.gameData = { id: event.target.id, player: thisPlayer };
             tttRoomFactory.editGameData(roomId, $rootScope.superTtt.newRoom.gameData).then(function(){});
         }
@@ -155,7 +157,7 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
 
     var createGame = function(n) {
         displayElement.innerHTML = "";
-        for (let i = 1, gridSize = 95 / n; i <= n * n; i++) {
+        for (let i = 1, gridSize = 96 / n; i <= n * n; i++) {
             let productElement = document.createElement("div");
             productElement.style.width = gridSize + "%";
             productElement.style.height = gridSize + "%";
@@ -170,13 +172,13 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
         let targetEmt = document.getElementById(dataFB.id);
         if (thisPlayer === dataFB.player) {
             targetEmt.innerHTML = "x";
-            targetEmt.style.color = "red";
-            targetEmt.style.fontSize = "xx-large";
+            targetEmt.style.color = "black";
+            targetEmt.style.backgroundColor = "black";
             checkStatus(dataFB.id, "x");
         } else {
             targetEmt.innerHTML = "o";
-            targetEmt.style.color = "blue";
-            targetEmt.style.fontSize = "xx-large";
+            targetEmt.style.color = "white";
+            targetEmt.style.backgroundColor = "white";
             checkStatus(dataFB.id, "o");
         }
     }
@@ -195,7 +197,6 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
                 if (arr[i][j] === blockIndex) {
                     x = i;
                     y = j;
-        console.log("check win", blockIndex, c ,x,y);
                 }
             }    
         }
@@ -267,34 +268,43 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
     function winner(c){
         if (c === "o") {
             stopGame();
-            $rootScope.superTtt.outcome = `Congradulations! Player ${rivalHand} just made the last move to win.`;    
+            $rootScope.superTtt.outcome = `Congradulations! Player ${$scope.rivalHand} just made the last move to win.`;    
+            $rootScope.user.sgLosses++;
+            UserFactory.editUser($rootScope.user);
         }
         else {
             stopGame();
             $rootScope.superTtt.outcome = `Congradulations! Player ${thisPlayer} just made the last move to win.`;    
+            $rootScope.user.sgWins++;
+            UserFactory.editUser($rootScope.user);
         }
     }
 
     function stopGame() {
-        lastCheckedBy = thisPlayer;               
+        $scope.lastCheckedBy = thisPlayer;               
     }
 
     $scope.initResetGame = function() {
         $rootScope.superTtt.newRoom.gameStatus.resetFlag = true;
         $rootScope.superTtt.newRoom.gameData.id = "";
         $rootScope.superTtt.newRoom.gameData.player = "";
-        tttRoomFactory.editRoom(roomId, $rootScope.superTtt.newRoom).then(function(){});
+        tttRoomFactory.editRoom(roomId, $rootScope.superTtt.newRoom).then(function(){
+            $rootScope.superTtt.newRoom.gameStatus.resetFlag = false;
+            tttRoomFactory.editRoom(roomId, $rootScope.superTtt.newRoom).then(function(){});
+        });
     };
 
     var resetGame = function() {
         for (let i = 1; i <= n * n; i++) {
             document.getElementById("grid-" + i).innerHTML = "";
+            document.getElementById("grid-" + i).style.backgroundColor = "";
         }
+        $scope.lastCheckedBy = gameCreator;    
         $rootScope.superTtt.outcome = "";    
         $rootScope.superTtt.newRoom.gameData.id = "";
         $rootScope.superTtt.newRoom.gameData.player = "";
         $rootScope.superTtt.roomMsgs = [];
-        $rootScope.superTtt.newRoom.gameStatus.resetFlag = false;
+        $rootScope.$apply();
     };
 
     $scope.send = function(){
@@ -320,9 +330,9 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, $routeParams, $locat
         for (let player in dataFB.players) {
             if (!$rootScope.superTtt.Players.hasOwnProperty(player)) {
                 $rootScope.superTtt.Players[player] = player;
-                if (player === thisPlayer) userHand = $rootScope.superTtt.Players[player];
-                else rivalHand = $rootScope.superTtt.Players[player];
+                if (player === thisPlayer) $scope.userHand = $rootScope.superTtt.Players[player];
+                else $scope.rivalHand = $rootScope.superTtt.Players[player];
             }
         }
-    };
+    }; 
 });

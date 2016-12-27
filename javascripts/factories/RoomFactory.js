@@ -5,7 +5,6 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 		return $q((resolve, reject)=>{
 			$http.get(`${FIREBASE_CONFIG.databaseURL}/cardRooms.json`)
 			.success(function(response){
-				// console.log("rrresponse", response);
 				let cardRooms = [];
 				Object.keys(response).forEach(function(key){
 					response[key].id = key;
@@ -105,7 +104,6 @@ app.factory("RoomFactory", function($q, $http, FIREBASE_CONFIG){
 	};
 
 	var editGameStatus = function(roomId, gameStatus){
-		console.log("gameStatus", gameStatus);
 		return $q((resolve, reject) =>{
 			$http.put(`${FIREBASE_CONFIG.databaseURL}/cardRooms/${roomId}/gameStatus.json`,
 				JSON.stringify(gameStatus)

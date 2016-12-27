@@ -1,7 +1,9 @@
 "use strict";
 
-app.controller("BlackjackMultiCtrl", function($scope, $rootScope, $routeParams, $location, CardFactory, RoomFactory, UserFactory, ResultService, RoomService){
+app.controller("BlackjackMultiCtrl", function($scope, $rootScope, $location, RoomService){
     $rootScope.blackJack.hasDealer = true;
+    $scope.maxPlayersOptions = [2, 3, 4, 5, 6];
+    $rootScope.blackJack.newRoom.profile.maxPlayers = 3 + '';
     RoomService.getRooms();
 
     $scope.getRooms = function(){

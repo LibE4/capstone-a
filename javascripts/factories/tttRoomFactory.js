@@ -5,7 +5,6 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 		return $q((resolve, reject)=>{
 			$http.get(`${FIREBASE_CONFIG.databaseURL}/tttRooms.json`)
 			.success(function(response){
-				console.log("rrresponse", response);
 				let tttRooms = [];
 				Object.keys(response).forEach(function(key){
 					response[key].id = key;
@@ -107,7 +106,6 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 	};
 
 	var editGameStatus = function(roomId, gameStatus){
-		console.log("gameStatus", gameStatus);
 		return $q((resolve, reject) =>{
 			$http.put(`${FIREBASE_CONFIG.databaseURL}/tttRooms/${roomId}/gameStatus.json`,
 				JSON.stringify(gameStatus)
@@ -122,7 +120,6 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 	};
 
 	var editGameReset = function(roomId, gameReset){
-		console.log("gameReset", gameReset);
 		return $q((resolve, reject) =>{
 			$http.put(`${FIREBASE_CONFIG.databaseURL}/tttRooms/${roomId}/gameReset.json`,
 				JSON.stringify(gameReset)
@@ -137,7 +134,6 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 	};
 
 	var editGameData = function(roomId, gameData){
-		console.log("gameData", gameData);
 		return $q((resolve, reject) =>{
 			$http.put(`${FIREBASE_CONFIG.databaseURL}/tttRooms/${roomId}/gameData.json`,
 				JSON.stringify(gameData)

@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $location, tttRoomFactory, UserFactory){
+app.controller("TetrisCtrl", function($rootScope, $location, UserFactory){
     var thisPlayer = $rootScope.user.username;
     $rootScope.tetris = {};
     /* Keys.js */
@@ -39,7 +39,7 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
         }
     }
     var lineOfMerge = nGridY - 1, rowBuildup = nGridY - 1, totalLines = 0, totalShapes = 0;
-    var pauseGame = false, fps = 2, gapToNextLevel = 2;
+    var pauseGame = false, fps = 2, gapToNextLevel = 5;
     // startAnimating(fps);
 
     // Keyboard Controls
@@ -115,13 +115,18 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
     // and only draws if your specified fps interval is achieved
     function animate() {
       // game stop control
+      $rootScope.tetris.totalLines = totalLines;
+      $rootScope.tetris.totalShapes = totalShapes;
+      $rootScope.$apply();
       if(lineOfMerge === 0 || lineOfMerge === 1) {
-        $rootScope.tetris.totalLines = totalLines;
-        $rootScope.tetris.totalShapes = totalShapes;
-        if ($rootScope.user.totalLines < totalLines) $rootScope.user.totalLines = totalLines;
-        if ($rootScope.user.totalShapes < totalShapes) $rootScope.user.totalShapes = totalShapes;
-        UserFactory.editUser($rootScope.user);
-        $rootScope.$apply();
+        if ($rootScope.user.totalLines < totalLines) {
+            $rootScope.user.totalLines = totalLines;
+            UserFactory.editUser($rootScope.user);
+        }
+        if ($rootScope.user.totalShapes < totalShapes) {
+            $rootScope.user.totalShapes = totalShapes;
+            UserFactory.editUser($rootScope.user);
+        }
         return; // to stop game
       } else if (pauseGame === true){
         pauseGame = false;
@@ -153,7 +158,6 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
         }
         lineOfMerge = currentShape.dy;
         rowBuildup = (rowBuildup >= currentShape.dy) ? currentShape.dy : rowBuildup;
-        console.log("merge", lineOfMerge, rowBuildup);
     }
 
     function checkLineFilled(){
@@ -169,7 +173,7 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
                 totalLines++;
                 if ((totalLines + 1) % gapToNextLevel === 0 ) {
                     // increase game speed
-                    fps += 0.2;
+                    fps += 0.1;
                     fpsInterval = 1000 / fps;
                 }
                 gameArea.splice(currentShape.dy + r, 1);
@@ -241,6 +245,7 @@ app.controller("TetrisCtrl", function($scope, $rootScope, $routeParams, $locatio
     function drawBlock(dx, dy, color){
         Game.ctx.fillStyle = color;
         Game.ctx.fillRect(dx * gridSize, dy * gridSize, gridSize, gridSize);
+        Game.ctx.strokeRect(dx * gridSize, dy * gridSize, gridSize, gridSize);
     }
 
     function drawCurrentShape(currentShape) {

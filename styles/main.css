@@ -1,88 +1,229 @@
-body {
-  background-color: #9ED78F; }
-  body #auth {
-    background-color: #E3F4DE;
-    padding: 5px; }
-  body h1 {
-    color: green;
-    text-align: center; }
+.btn-custom {
+  background-color: #37493c !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d3ded6", endColorstr="#36483b");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#d3ded6), to(#36483b));
+  background-image: -moz-linear-gradient(top, #d3ded6, #36483b);
+  background-image: -ms-linear-gradient(top, #d3ded6, #36483b);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d3ded6), color-stop(100%, #36483b));
+  background-image: -webkit-linear-gradient(top, #d3ded6, #36483b);
+  background-image: -o-linear-gradient(top, #d3ded6, #36483b);
+  background-image: linear-gradient(#d3ded6, #36483b);
+  border-color: #36483b #36483b #161d18;
+  color: #333 !important;
+  font-weight: bold !important;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.99);
+  -webkit-font-smoothing: antialiased; }
 
-.yourStats {
-  margin-top: 1em;
-  font-size: medium;
-  font-weight: bold; }
-
-.recharge {
-  margin-top: 3em;
-  border-top: 3px solid black; }
-
-.game-set {
-  margin-top: 3em; }
-
-.game-set ul a {
-  font-size: medium;
-  color: blue; }
-
-.card-table {
-  text-align: left;
-  height: 122px;
-  width: 800px;
-  border: 1px solid black; }
-
-.Hand {
-  height: 122px;
-  border-right: 1px solid black; }
-
-.bet {
-  margin-top: 1em; }
-
-#yourScore .digits {
-  font-weight: 700; }
-
-#wins {
-  color: #056B42; }
-
-#losses {
-  color: #F16D17; }
-
-#balance {
-  font-weight: bold;
-  color: blue; }
-
-#username {
-  font-style: italic;
-  font-weight: bolder;
-  color: purple; }
-
-#control {
-  background-color: #7887AB;
-  margin-top: 1em;
-  text-align: center; }
-
-#ttt {
-  width: 600px;
-  height: 600px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: space-between;
-  margin-top: 3em; }
-
-.blocks {
-  width: 30%;
-  height: 30%;
-  box-sizing: border-box;
-  border: 1px solid lightblue;
-  margin: auto;
-  text-align: center; }
-
-.blocks:before {
-  content: "";
-  display: inline-block;
-  vertical-align: middle;
+html, body {
   height: 100%; }
 
-#canvasContainer {
-  background-color: black;
-  border: 3px solid grey; }
+body {
+  background-color: #202020; }
+  body input {
+    color: rgba(0, 0, 0, 0.5); }
+  body h1, body h2 {
+    color: #CCCECB;
+    text-align: center; }
+  body .partial-container {
+    height: 100%; }
+  body .row {
+    margin: 0;
+    padding: 0; }
+  body #auth {
+    margin-top: 5em;
+    background-color: #CCCECB;
+    border-radius: 5px; }
+    body #auth label {
+      margin-left: 3em;
+      color: #202020; }
+  body .navbar {
+    background-color: #889a78;
+    margin-bottom: 0; }
+    body .navbar .navbar-brand {
+      color: rgba(0, 0, 0, 0.5);
+      font-style: italic;
+      font-size: 1.5em;
+      font-weight: bold; }
+    body .navbar .navbar-nav > li > a {
+      color: #CCCECB;
+      font-weight: bold; }
+  body #home .home-header {
+    text-align: center;
+    padding-bottom: 2em;
+    margin-bottom: 3em;
+    border-bottom: 3px solid #CCCECB; }
+  body #home #username {
+    font-style: italic;
+    font-weight: bolder;
+    color: white; }
+  body #home .thumbnail {
+    border-width: 5px;
+    border-style: inset; }
+    body #home .thumbnail img {
+      width: 200px;
+      height: 200px; }
+    body #home .thumbnail h4 {
+      color: rgba(0, 0, 0, 0.5);
+      text-align: center; }
+  body #profile-container .panel {
+    background-color: #CCCECB; }
+  body #profile-container h3 {
+    text-align: center;
+    background-color: #889A78;
+    margin-top: 0; }
+  body #profile-container .recharge-container {
+    border-top: 3px solid #CCCECB;
+    margin-top: 1em;
+    padding: 0; }
+  body #profile-container .recharge {
+    border-radius: 3px;
+    text-align: center;
+    margin-top: 2em;
+    padding: 0 15px 15px;
+    margin-bottom: 1em;
+    background-color: #CCCECB; }
+  body #sg-container {
+    color: #CCCECB;
+    height: 100%; }
+    body #sg-container #sg-setup {
+      padding: 0;
+      font-weight: bold;
+      font-size: large; }
+      body #sg-container #sg-setup .row {
+        padding: 3em 1em;
+        border-top: 3px solid #CCCECB; }
+    body #sg-container #sg-game {
+      margin-top: 3em; }
+      body #sg-container #sg-game .panel-title {
+        background-color: #CCCECB; }
+      body #sg-container #sg-game h3, body #sg-container #sg-game #yourStatus {
+        text-align: center;
+        color: rgba(0, 0, 0, 0.5); }
+      body #sg-container #sg-game .btn {
+        width: 250px; }
+      body #sg-container #sg-game img {
+        height: 100px; }
+      body #sg-container #sg-game .winner_logo {
+        margin-left: 70px; }
+    body #sg-container #ttt {
+      background: #FFA700;
+      border: 3px ridge white;
+      width: 500px;
+      height: 500px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-content: space-between;
+      padding: 1em; }
+    body #sg-container .blocks {
+      box-sizing: border-box;
+      border: 1px solid black;
+      margin: auto;
+      text-align: center; }
+    body #sg-container .blocks:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      height: 100%; }
+    body #sg-container .messages-card {
+      margin-top: 0; }
+  body #tetris-container .row {
+    margin-bottom: 3em; }
+  body #tetris-container .table-key-info {
+    border-radius: 3px;
+    background-color: #CCCECB;
+    font-weight: bold; }
+  body #tetris-container #username {
+    margin-left: 2em; }
+  body #tetris-container thead {
+    background-color: #5CA61E;
+    color: #CCCECB; }
+  body #tetris-container #myCanvas {
+    background-color: black;
+    border: 3px solid grey;
+    margin: 0 auto; }
+  body #tetris-container .panel-title {
+    text-align: center;
+    background-color: #CCCECB; }
+  body .blackjack .yourStats {
+    margin-top: 1em;
+    font-size: medium;
+    font-weight: bold; }
+  body .blackjack .game-set ul {
+    margin-top: 3em; }
+  body .blackjack #cardgame-setup {
+    padding: 0;
+    color: #CCCECB;
+    font-weight: bold;
+    font-size: large; }
+    body .blackjack #cardgame-setup .row {
+      padding: 3em 1em;
+      border-top: 3px solid #CCCECB; }
+  body .blackjack .card-game {
+    margin-top: 3em;
+    color: #CCCECB; }
+    body .blackjack .card-game .card-table {
+      padding: 0;
+      background-color: #A4A4A4;
+      text-align: left;
+      height: 122px;
+      border: 1px solid white; }
+    body .blackjack .card-game .Hand {
+      color: rgba(0, 0, 0, 0.5);
+      font-weight: bold;
+      background-color: white;
+      text-align: center;
+      border: 1px solid #5CA61E;
+      border-right: 2px solid #5CA61E; }
+      body .blackjack .card-game .Hand img {
+        height: 100px; }
+  body .messages-card {
+    color: rgba(0, 0, 0, 0.5);
+    background-color: white;
+    margin-top: 1.5em; }
+    body .messages-card #messages {
+      border-top: 1px groove grey;
+      border-bottom: 1px groove grey;
+      height: 300px;
+      overflow: auto; }
+    body .messages-card form {
+      text-align: center;
+      margin-top: 1em; }
+  body .bet {
+    margin-top: 1em; }
+  body #yourScore, body #yourStatus, body #yourRecord {
+    font-weight: 700; }
+  body #wins {
+    color: #056B42; }
+  body #losses {
+    color: #F16D17; }
+  body #balance {
+    font-weight: bold;
+    color: #68E600; }
+  body #username {
+    font-style: italic;
+    font-weight: bolder;
+    color: #5CA61E; }
+  body #time {
+    font-style: italic;
+    font-size: x-small; }
+  body .single-card-ctrl {
+    margin-top: 1em; }
+  body .flip {
+    padding: 1em;
+    font: bold;
+    color: red; }
+  body .caption {
+    border: 1px solid white;
+    background-color: #CCCECB;
+    color: #5ca61e;
+    font-size: medium;
+    word-break: break-all;
+    white-space: normal; }
+  body .instruction {
+    text-align: center;
+    background-color: #5CA61E;
+    color: #CCCECB;
+    margin-bottom: 1em; }

@@ -1,31 +1,91 @@
-<header id="header" class="">
-  <h3>Tetris Game!</h1>
-</header><!-- /header -->
-
-<div class="row">
-  <div class="col-xs-offset-4 col-xs-4">
-    <div>Enter: start game</div>
-    <div>P: pause game</div>
-    <div>N: restart game</div>
-    <div>W: rotate counter clockwise</div>
-    <div>R: rotate clockwise</div>
-    <div>Left Arrow: move left</div>
-    <div>Left Arrow: move left</div>
-    <div>Right Arrow: move right</div>
-    <div>Down Arrow: move down faster</div>
-    <div>Spacebar: drop to bottom</div>
-    <div>Up Arrow: move up</div>
+<div id="tetris-container">
+  <div class="row">
+  <header id="header" class="col-xs-4 col-xs-offset-4">
+    <h1>Tetris Game</h1>
+  </header>
   </div>
-  <div class="col-xs-offset-4 col-xs-4">
-    <div id="canvasContainer">
-      <canvas id='myCanvas' width="200" height="400"></canvas>
+
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="col-xs-10 col-xs-offset-1">
+        <table class="table table-striped table-key-info">
+          <thead>
+            <tr>
+              <td>KEY</td><td>ACTION</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Enter</td><td>: start game</td>
+            </tr>
+            <tr>
+              <td>P</td><td>: pause game</td>
+            </tr>
+            <tr>
+              <td>N</td><td>: restart game</td>
+            </tr>
+            <tr>
+              <td>W</td><td>: rotate counter clockwise</td>
+            </tr>
+            <tr>
+              <td>R</td><td>: rotate clockwise</td>
+            </tr>
+            <tr>
+              <td>Left Arrow</td><td>: move left</td>
+            </tr>
+            <tr>
+              <td>Right Arrow</td><td>: move right</td>
+            </tr>
+            <tr>
+              <td>Down Arrow</td><td>: move down</td>
+            </tr>
+            <tr>
+              <td>Spacebar</td><td>: drop to bottom</td>
+            </tr>
+            <tr>
+              <td>Up Arrow</td><td>: move up</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <div id="tetris-center-area" class="col-xs-4">
+      <div id="canvasContainer" class="col-xs-6 col-xs-offset-3">
+        <canvas id='myCanvas' width="200" height="400"></canvas>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="panel">
+        <div class="panel-heading">
+          <h3 class="panel-title"><span id="username">{{user.username}}</span></h3>
+        </div>    
+        <div class="panel-body">
+          <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="img/user-default.png" class="img-rounded img-responsive"> </div>
+          <div class=" col-md-9 col-lg-9 "> 
+            <table class="table table-striped table-user-information">
+              <tbody>
+                <tr>
+                  <td>LINE RECORD:</td>
+                  <td>{{user.totalLines}}</td>
+                </tr>
+                <tr>
+                  <td>SHAPE RECORD:</td>
+                  <td>{{user.totalShapes}}</td>
+                </tr>
+                <tr animate-on-change="tetris.totalLines">
+                  <td>LINE FILLED:</td>
+                  <td><span id="wins">{{tetris.totalLines}}</span></td>
+                </tr>
+                <tr>
+                  <td>CURRENT SHAPE:</td>
+                  <td><span id="balance">{{tetris.totalShapes}}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  	</div>
   </div>
 </div>
 
-<div class="row">
-	<div class="col-xs-offset-4 col-xs-4">
-		<div>You eliminated total lines <span id="wins">{{tetris.totalLines}}.</span></div>
-		<div>You consumed total shapes <span id="balance">{{tetris.totalShapes}}.</span></div>
-	</div>
-</div>

@@ -37,8 +37,6 @@ app.service("ResultService", function($rootScope, UserFactory){
   };
 
 	this.checkDeal = function (userHand, dealerHand){
-	    userHand.score = that.getScore(userHand.cards);
-	    dealerHand.score = that.getScore(dealerHand.cards);
 	    if (dealerHand.score === 21){
 	    	$rootScope.blackJack.isResultOut = true;
 		    if (userHand.score === 21){
@@ -55,7 +53,6 @@ app.service("ResultService", function($rootScope, UserFactory){
 	};
 
 	this.checkUserHit = function (userHand){
-	    userHand.score = that.getScore(userHand.cards);
 	    if (userHand.score >= 21){
 		    	$rootScope.blackJack.isDealerTurn = true;
 			    if (userHand.score > 21){
@@ -69,8 +66,6 @@ app.service("ResultService", function($rootScope, UserFactory){
 	};
 
 	this.checkWinner = function (userHand, dealerHand){
-	    userHand.score = that.getScore(userHand.cards);
-	    dealerHand.score = that.getScore(dealerHand.cards);
     	$rootScope.blackJack.isResultOut = true;
 	    if (dealerHand.score > 21 || userHand.score > dealerHand.score){
 	        $rootScope.blackJack.outcome = "You won!";
@@ -88,8 +83,6 @@ app.service("ResultService", function($rootScope, UserFactory){
 	};
 
 	this.checkPtpDeal = function (userHand, rivalHand){
-	    userHand.score = that.getScore(userHand.cards);
-	    rivalHand.score = that.getScore(rivalHand.cards);
 	    if (userHand.score === 21 && rivalHand.score === 21){
 	        $rootScope.blackJack.outcome = "You tied!";
 	    }else if (userHand.score === 21 && rivalHand.score !== 21){
@@ -105,8 +98,6 @@ app.service("ResultService", function($rootScope, UserFactory){
       } 
 	}; 
 	this.checkPtpWinner = function (userHand, rivalHand){
-	    userHand.score = that.getScore(userHand.cards);
-	    rivalHand.score = that.getScore(rivalHand.cards);
     	$rootScope.blackJack.isResultOut = true;
 	    if (rivalHand.score > 21 && userHand.score <= 21){
         $rootScope.blackJack.outcome = "You won!";
