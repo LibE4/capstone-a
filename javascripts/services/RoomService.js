@@ -46,7 +46,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
             $rootScope.blackJack.newRoom.profile.players.Dealer = "Dealer";
             $rootScope.blackJack.newRoom.profile.minPlayerInRoom = 1;
         } else $rootScope.blackJack.newRoom.profile.minPlayerInRoom = 0;
-        $rootScope.blackJack.newRoom.profile.players[thisPlayer] = thisPlayer;
+        $rootScope.blackJack.newRoom.profile.players[thisPlayer] = $rootScope.user.icon;
         RoomFactory.postNewRoom($rootScope.blackJack.newRoom).then(function(response){
             roomId = response.name;
             $rootScope.blackJack.isRoomSet = true; 
@@ -67,7 +67,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
                 $rootScope.blackJack.isRoomAvailable = false;
             } else {
                 $rootScope.blackJack.newRoom.profile = roomProfile;
-                $rootScope.blackJack.newRoom.profile.players[thisPlayer] = thisPlayer;
+                $rootScope.blackJack.newRoom.profile.players[thisPlayer] = $rootScope.user.icon;
                 RoomFactory.editPlayerList(roomId, $rootScope.blackJack.newRoom.profile.players).then(function(){
                     sendMsg("SYSTEM", thisPlayer + " joined the game!");
                     $rootScope.blackJack.isRoomSet = true; 
@@ -305,6 +305,7 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
                 $rootScope.blackJack.Players[player] = {};
                 $rootScope.blackJack.Players[player].cards = [];
                 $rootScope.blackJack.Players[player].score = 0;
+                $rootScope.blackJack.Players[player].icon = dataFB.players[player];
                 if (player === "Dealer") dealerHand = $rootScope.blackJack.Players[player];
                 else if (player === thisPlayer) userHand = $rootScope.blackJack.Players[player];
                 else rivalHand = $rootScope.blackJack.Players[player];

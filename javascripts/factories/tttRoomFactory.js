@@ -147,20 +147,6 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 		});
 	};
 
-	var postTttInRoom = function(roomId, newTtt){
-		return $q((resolve, reject) =>{
-			$http.post(`${FIREBASE_CONFIG.databaseURL}/tttRooms/${roomId}.json`,
-				JSON.stringify(newTtt)
-			)
-			.success(function(postResponse){
-				resolve(postResponse);
-			})
-			.error(function(errorResponse){
-				reject(errorResponse);
-			});
-		});
-	};
-
 	var postMsgInRoom = function(roomId, newMessage){
 		return $q((resolve, reject) =>{
 			$http.post(`${FIREBASE_CONFIG.databaseURL}/tttRooms/${roomId}.json`,
@@ -185,6 +171,5 @@ app.factory("tttRoomFactory", function($q, $http, FIREBASE_CONFIG){
 					editGameStatus: editGameStatus,
 					editGameReset: editGameReset,
 					editGameData: editGameData,
-					postTttInRoom: postTttInRoom,
 					postMsgInRoom: postMsgInRoom};
 });

@@ -20,7 +20,9 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
     CardFactory.getCards(4).then(function(response){
         if (parseInt(response.remaining) <= 75) { needShuffle = true; }
         $rootScope.blackJack.userHand.cards = response.cards.splice(0, 2);
+        getPlayerScore("userHand");
         $rootScope.blackJack.dealerHand.cards = response.cards;
+        getPlayerScore("dealerHand");
         // dealer hide first card
         dealerFlipCard();
         ResultService.checkDeal($rootScope.blackJack.userHand, $rootScope.blackJack.dealerHand);
@@ -32,6 +34,7 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
   $scope.userHit = function (){
       CardFactory.getCards(1).then(function(response){
           $rootScope.blackJack.userHand.cards = $rootScope.blackJack.userHand.cards.concat(response.cards);
+          getPlayerScore("userHand");
           ResultService.checkUserHit($rootScope.blackJack.userHand);
           if ($rootScope.blackJack.isResultOut) { dealerFlipCard(); voice(); }
           else if ($rootScope.blackJack.isDealerTurn) $scope.userStand();
@@ -71,7 +74,7 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
       if ($rootScope.blackJack.dealerHand.score < 17){
           CardFactory.getCards(1).then(function(response){
               $rootScope.blackJack.dealerHand.cards = $rootScope.blackJack.dealerHand.cards.concat(response.cards);
-              $rootScope.blackJack.dealerHand.score = ResultService.getScore($rootScope.blackJack.dealerHand.cards);
+              getPlayerScore("dealerHand");
               if ($rootScope.blackJack.dealerHand.score >= 17){
                   dealerStand();
                   return;
@@ -90,6 +93,10 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
       let c = $rootScope.blackJack.dealerHand.cards[0].image;
       $rootScope.blackJack.dealerHand.cards[0].image = holeCardImg;
       holeCardImg = c;
+  };
+
+  var getPlayerScore = function (hand){
+      $rootScope.blackJack[hand].score = ResultService.getScore($rootScope.blackJack[hand].cards);
   };
 
   $scope.leaveRoom = function(){

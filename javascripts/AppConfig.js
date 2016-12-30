@@ -35,7 +35,7 @@ app.config(function($routeProvider){
 		})
 		.when('/game/user profile', {
 				templateUrl: 'partials/profile.html',
-				controller: 'HomeCtrl'
+				controller: 'ProfileCtrl'
 		})
 		.when('/game/blackjack', {
 				templateUrl: 'partials/blackjack.html',

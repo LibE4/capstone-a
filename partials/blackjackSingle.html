@@ -3,7 +3,7 @@
 	<div class="row card-game">
 		<div class="col-xs-8 col-xs-offset-2 card-table">
 			<div id="dealerHand" class="Hand col-xs-2">
-				Dealer: <span ng-show="blackJack.isDealerTurn">{{blackJack.dealerHand.score}}</span>
+				Dealer: <span ng-show="blackJack.isResultOut || blackJack.isDealerTurn">{{blackJack.dealerHand.score}}</span>
 	      <img alt="User Pic" src="img/dealer.jpeg" class="img-round">
 			</div>
 			<div class=" col-xs-10">
@@ -13,7 +13,7 @@
 		<div class="col-xs-8 col-xs-offset-2 card-table">
 			<div id="yourHand" class="Hand  col-xs-2">
 				{{user.username}}: <span id="yourScore">{{blackJack.userHand.score}}</span>
-	      <img alt="User Pic" src="img/user-default.png" class="img-round">
+	      <img alt="User Pic" ng-src="{{user.icon}}" class="img-round">
 			</div>
 			<div class=" col-xs-10">
 				<img width="90px" height="120px" ng-repeat="card in blackJack.userHand.cards" ng-src="{{card.image}}">

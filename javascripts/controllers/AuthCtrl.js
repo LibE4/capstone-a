@@ -50,6 +50,7 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 	$scope.registerUser = function(registerNewUser){
 		AuthFactory.registerWithEmail(registerNewUser).then(function(didRegister){
 			registerNewUser.uid = didRegister.uid;
+			registerNewUser.icon = 'img/user-default.png';
 			registerNewUser.balance = 0;
 			registerNewUser.wins = 0;
 			registerNewUser.losses = 0;
@@ -75,6 +76,7 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
         if (newUserData === undefined){
 	        $rootScope.user = {
 	          uid: userData.uid,
+						icon: "img/user-default.png",
 	          username: userData.displayName,
 						balance : 100,
 						wins : 0,

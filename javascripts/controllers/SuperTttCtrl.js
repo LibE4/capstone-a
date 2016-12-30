@@ -15,6 +15,8 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, tttRoomFactory, User
         $scope.userHand = "";
         $scope.rivalHand = "";
         $scope.lastCheckedBy = "";
+        $scope.isUserWin = false;
+        $scope.isRivalWin = false;
         $rootScope.superTtt = {};
         $rootScope.superTtt.newRoom = {};
         $rootScope.superTtt.newRoom.profile = {};
@@ -76,7 +78,7 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, tttRoomFactory, User
             } else {
                 tttRoomFactory.editGameStatus(roomId, $rootScope.superTtt.newRoom.gameStatus); // to assure gameStatus
                 $rootScope.superTtt.newRoom.profile = roomProfile;
-                $rootScope.superTtt.newRoom.profile.players[thisPlayer] = thisPlayer;
+                $rootScope.superTtt.newRoom.profile.players[thisPlayer] = $rootScope.user.icon;
                 tttRoomFactory.editPlayerList(roomId, $rootScope.superTtt.newRoom.profile.players).then(function(){
                     $rootScope.superTtt.isRoomSet = true; 
                     n = roomProfile.nGrids;
@@ -146,7 +148,7 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, tttRoomFactory, User
 
     // to create grids
     var initGame = function() {
-        $rootScope.superTtt.newRoom.profile.players[thisPlayer] = thisPlayer;
+        $rootScope.superTtt.newRoom.profile.players[thisPlayer] = $rootScope.user.icon;
         $rootScope.superTtt.newRoom.profile.initGame = true;
         $rootScope.superTtt.newRoom.profile.gameOn = true;
         $rootScope.superTtt.newRoom.profile.nGrids = $scope.nGrids;
@@ -268,12 +270,14 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, tttRoomFactory, User
     function winner(c){
         if (c === "o") {
             stopGame();
-            $rootScope.superTtt.outcome = `Congradulations! Player ${$scope.rivalHand} just made the last move to win.`;    
+            $rootScope.superTtt.outcome = `Congradulations! Player ${$scope.rivalHand.name} just made the last move to win.`;    
+            $scope.isRivalWin = true;
             $rootScope.user.sgLosses++;
             UserFactory.editUser($rootScope.user);
         }
         else {
             stopGame();
+            $scope.isUserWin = true;
             $rootScope.superTtt.outcome = `Congradulations! Player ${thisPlayer} just made the last move to win.`;    
             $rootScope.user.sgWins++;
             UserFactory.editUser($rootScope.user);
@@ -301,6 +305,8 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, tttRoomFactory, User
         }
         $scope.lastCheckedBy = gameCreator;    
         $rootScope.superTtt.outcome = "";    
+        $scope.isUserWin = false;    
+        $scope.isRivalWin = false;    
         $rootScope.superTtt.newRoom.gameData.id = "";
         $rootScope.superTtt.newRoom.gameData.player = "";
         $rootScope.superTtt.roomMsgs = [];
@@ -329,7 +335,9 @@ app.controller("SuperTttCtrl", function($scope, $rootScope, tttRoomFactory, User
         $rootScope.superTtt.newRoom.profile.players = dataFB.players;
         for (let player in dataFB.players) {
             if (!$rootScope.superTtt.Players.hasOwnProperty(player)) {
-                $rootScope.superTtt.Players[player] = player;
+                $rootScope.superTtt.Players[player] = {};
+                $rootScope.superTtt.Players[player].name = player;
+                $rootScope.superTtt.Players[player].icon = dataFB.players[player];
                 if (player === thisPlayer) $scope.userHand = $rootScope.superTtt.Players[player];
                 else $scope.rivalHand = $rootScope.superTtt.Players[player];
             }

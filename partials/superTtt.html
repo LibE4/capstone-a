@@ -39,31 +39,31 @@
         </div>    
         <div class="panel-body">
           <div class="col-xs-3">
-              <img alt="User Pic" src="img/user-default.png" class="img-rounded">
+              <img alt="User Pic" ng-src="{{userHand.icon}}" class="img-rounded">
           </div>
           <div class="col-xs-8 col-xs-offset-1" ng-show="!(lastCheckedBy === user.username)">
               <h3>Go!</h3>
           </div>
           <div class="col-xs-8 col-xs-offset-1" ng-show="(lastCheckedBy === user.username)">
-              <h3 ng-show="!superTtt.outcome">Wait...</h3>
-              <img class="winner_logo" ng-show="superTtt.outcome" src="img/winner_logo.png">
+              <h3 ng-show="!isUserWin">Wait...</h3>
+              <img class="winner_logo" ng-show="isUserWin" src="img/winner_logo.png">
           </div>
         </div>
       </div>
       <div class="panel" ng-show="rivalHand">
         <div class="panel-heading">
-          <h3 class="panel-title"><span id="username">{{rivalHand}}</span></h3>
+          <h3 class="panel-title"><span id="username">{{rivalHand.name}}</span></h3>
         </div>    
         <div class="panel-body">
           <div class="col-xs-3">
-              <img alt="User Pic" src="img/user-default.png" class="img-rounded">
+              <img alt="User Pic" src="{{rivalHand.icon}}" class="img-rounded">
           </div>
           <div class="col-xs-8 col-xs-offset-1" ng-show="(lastCheckedBy === user.username)">
-              <h3>Go!</h3>
+              <h3 ng-show="!isRivalWin">Go!</h3>
+              <img class="winner_logo" ng-show="isRivalWin" src="img/winner_logo.png">
           </div>
           <div class="col-xs-8 col-xs-offset-1" ng-show="!(lastCheckedBy === user.username)">
-              <h3 ng-show="!superTtt.outcome">Wait...</h3>
-              <img class="winner_logo" ng-show="superTtt.outcome" src="img/winner_logo.png">
+              <h3>Wait...</h3>
           </div>
         </div>
       </div>

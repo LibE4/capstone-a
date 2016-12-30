@@ -49,7 +49,7 @@
         <div class="Hand col-xs-2">
       		{{k}}: <span ng-show="blackJack.isResultOut || blackJack.isDealerTurn">{{blackJack.Players[k].score}}</span>
           <div>
-              <img alt="User Pic" src="img/user-default.png" class="img-rounded">
+              <img alt="User Pic" ng-src="{{blackJack.Players[k].icon}}" class="img-rounded">
           </div>
         </div>
         <div class=" col-xs-10">

@@ -103,7 +103,8 @@ body {
       body #sg-container #sg-game .btn {
         width: 250px; }
       body #sg-container #sg-game img {
-        height: 100px; }
+        max-width: 100px;
+        max-height: 100px; }
       body #sg-container #sg-game .winner_logo {
         margin-left: 70px; }
     body #sg-container #ttt {
@@ -175,10 +176,12 @@ body {
       font-weight: bold;
       background-color: white;
       text-align: center;
+      height: 122px;
       border: 1px solid #5CA61E;
       border-right: 2px solid #5CA61E; }
       body .blackjack .card-game .Hand img {
-        height: 100px; }
+        max-width: 120px;
+        max-height: 100px; }
   body .messages-card {
     color: rgba(0, 0, 0, 0.5);
     background-color: white;
