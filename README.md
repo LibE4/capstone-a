@@ -1,3 +1,6 @@
-# angular-contacts
+# online-games built with angular
 
-Build a CRUD address book.
+A fun website with three games:
+card game: blackjack;
+super gomoku game;
+tetris game.
