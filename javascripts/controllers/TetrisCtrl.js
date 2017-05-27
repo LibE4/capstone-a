@@ -231,6 +231,18 @@ app.controller("TetrisCtrl", function($rootScope, $location, UserFactory){
         Game.ctx.fillStyle="black";
         Game.ctx.fillRect(0,0,Game.canvas.width,Game.canvas.height);
 
+        // draw vertical helping lines
+        Game.ctx.setLineDash([2, 18]);
+        Game.ctx.strokeStyle = '#CCCECB';
+        for (let i = 1; i < nGridX; i++){
+            Game.ctx.beginPath();
+            Game.ctx.moveTo( i * gridSize, 0);
+            Game.ctx.lineTo(i * gridSize, 400);
+            Game.ctx.stroke();
+        }
+        Game.ctx.setLineDash([]);
+        Game.ctx.strokeStyle = 'black';
+
         handleEvent();
         // Draw code goes here.
             drawGameArea(gameArea, rowBuildup);
