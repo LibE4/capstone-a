@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("BlackjackCtrl", function($scope){
+app.controller("BlackjackCtrl", function($scope, CardFactory){
     $scope.navCardGame = 
         [
           {
@@ -19,4 +19,9 @@ app.controller("BlackjackCtrl", function($scope){
             description:"In this game, you are against one human player. There is no dealer. Results will be checked after deal or both players stand."
           }
     ];
+
+    //to get new deck_id
+    //only need to run it once if previous one inactivated
+    //CardFactory.getNewDecks(6);
+
 });

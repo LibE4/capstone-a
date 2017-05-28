@@ -11,7 +11,6 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
   $rootScope.blackJack.isResultOut = false; 
   var needShuffle = false;    
   var holeCardImg = "img/buffy.jpg";
-  // var holeCardImg = "./winner_logo.png";
   $scope.gameOn = false;
   $scope.standOn = false;
 
@@ -65,7 +64,6 @@ app.controller("BlackjackSingleCtrl", function($scope, $rootScope, $location, Ca
     $rootScope.blackJack.isDealerTurn = false;
     $rootScope.blackJack.isResultOut = false;
     holeCardImg = "img/buffy.jpg";      
-    // holeCardImg = "./winner_logo.png";      
     $scope.gameOn = false;
     $scope.standOn = false;
   };    

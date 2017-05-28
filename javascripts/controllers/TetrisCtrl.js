@@ -40,7 +40,6 @@ app.controller("TetrisCtrl", function($rootScope, $location, UserFactory){
     }
     var lineOfMerge = nGridY - 1, rowBuildup = nGridY - 1, totalLines = 0, totalShapes = 0;
     var pauseGame = false, fps = 2, gapToNextLevel = 5;
-    // startAnimating(fps);
 
     // Keyboard Controls
     window.onkeydown = function() {
