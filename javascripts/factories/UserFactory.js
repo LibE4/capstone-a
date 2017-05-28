@@ -6,10 +6,13 @@ app.factory("UserFactory", function($q, $http, FIREBASE_CONFIG){
 			$http.post(`${FIREBASE_CONFIG.databaseURL}/users.json`,
 		  JSON.stringify({
 		  	uid: authData.uid,
+		  	icon: authData.icon,
 		  	username: authData.username,
 		  	balance: authData.balance,
 		  	wins: authData.wins,
 		  	losses: authData.losses,
+		  	sgWins: authData.sgWins,
+		  	sgLosses: authData.sgLosses,
 		  	totalLines: authData.totalLines,
 		  	totalShapes: authData.totalShapes
 		  }))

@@ -4,10 +4,10 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 	$scope.loginContainer = true;
 	$scope.registerContainer = false;
   $scope.googleLoginContainer = false;
-	$scope.login = {
-		email: "a@a.com",
-		password: "123456"
-	};
+	//$scope.login = {
+	//	email: "a@a.com",
+	//	password: "123456"
+	//};
 	
 
 	if($location.path() === "/logout"){
@@ -18,7 +18,6 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
 
 	let logMeIn = function(loginStuff){
 		AuthFactory.authenticate(loginStuff).then(function(didLogin){
-			console.log("didLogin", didLogin);
 			return UserFactory.getUser(didLogin.uid);
 		})
 		.then(function(userCreds){
@@ -90,7 +89,6 @@ app.controller("AuthCtrl", function($scope, $rootScope, $location, AuthFactory, 
         } else {
 					$rootScope.user = newUserData;
         }
-        console.log("google user",$rootScope.user );
 			});
       $location.url("/game/home");
     }).catch(function(error) {

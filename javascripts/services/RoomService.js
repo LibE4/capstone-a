@@ -20,7 +20,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
     var numPlayers = 0;
     var needShuffle = false;
     var holeCardImg = "img/buffy.jpg";
-    // var holeCardImg = "./winner_logo.png";
     var origCardImg = "";
     var dealerHand = {};
     var userHand = {};
@@ -35,7 +34,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
     this.getRooms = function(){
         RoomFactory.getRooms().then((response) => {
             $rootScope.blackJack.rooms = response;
-            console.log("rooms response", response);
             $rootScope.blackJack.isRoomAvailable = true; //reset flag
         });
     };
@@ -60,7 +58,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
 
     this.joinRoom = function(roomIdDOM){
         roomId = roomIdDOM;
-          // console.log("roomId", roomId);
         $rootScope.user.roomid = roomId;
         RoomFactory.getProfileInRoom(roomId).then(function(roomProfile){
             if (Object.keys(roomProfile.players).length >= roomProfile.maxPlayers){
@@ -84,8 +81,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
     this.leaveRoom = function(){
         $rootScope.blackJack.isRoomSet = false; 
         numPlayers--;
-        console.log("numPlayers", numPlayers);
-        console.log("minPlayerInRoom", $rootScope.blackJack.newRoom.profile.minPlayerInRoom);
         if (numPlayers === $rootScope.blackJack.newRoom.profile.minPlayerInRoom){
             // no player in room
             RoomFactory.deleteRoom(roomId).then(function(){
@@ -104,7 +99,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
 
     // to sync cards, players in same room
     var setRealtimeData = function(data1, data2) {
-        // console.log("data1", data1.val());
         let dataFB = data1.val();
         if (dataFB.hasOwnProperty("code")) {
             let card = dataFB;
@@ -194,7 +188,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
         RoomFactory.editGameStatus(roomId, $rootScope.blackJack.newRoom.gameStatus).then(function(){});
         CardFactory.getCards( numPlayers * 2 ).then(function(response){
             if(parseInt(response.remaining) <= 60) {
-                console.log("response.remaining", response.remaining);
                 needShuffle = true; 
             }
             let count = 0;
@@ -275,7 +268,6 @@ app.service("RoomService", function($rootScope, CardFactory, RoomFactory, Result
         $rootScope.blackJack.Players[thisPlayer].score = 0;
         $rootScope.blackJack.standOn = false;
         holeCardImg = "img/buffy.jpg";
-        // holeCardImg = "./winner_logo.png";
         origCardImg = "";
         $rootScope.blackJack.roomMsgs = [];
         $rootScope.blackJack.newRoom.gameStatus.clearTable = false;
